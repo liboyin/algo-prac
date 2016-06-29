@@ -1,5 +1,5 @@
 from lib import argmax, identity, rev_range
-from math import inf, log2
+from math import log2
 
 class MinMaxHeap:
     """
@@ -10,14 +10,10 @@ class MinMaxHeap:
     ref: Min-Max Heaps and Generalized Priority Queues, Atkinson et al., ACM Communications, Oct 1986
     """
     @staticmethod
-    def cngc(i):  # children and grandchildren
-        return [i*2+1, i*2+2, i*4+3, i*4+4, i*4+5, i*4+6]
-
-    @staticmethod
     def min_layer(i):
         return int(log2(i+1)) % 2 == 0
 
-    def __init__(self, iterable, key=identity):  # key: T -> num
+    def __init__(self, iterable, key=identity):  # key: T -> comparable
         self.a = list(iterable)
         self.key = key
         self.heapify()
@@ -67,11 +63,21 @@ class MinMaxHeap:
         else:
             self.trickle_down_max(i)
 
+    def cngc(self, i):  # enumerate through children and grandchildren
+        a = self.a
+        ix = []
+        for j in [i*2+1, i*2+2, i*4+3, i*4+4, i*4+5, i*4+6]:
+            if j >= len(a):
+                break
+            ix.append((j, a[j]))
+        return ix
+
     def trickle_down_min(self, i):  # i is on min layer
         a, f = self.a, self.key
         if i * 2 + 1 >= len(a):  # i has no children
             return
-        m = min(self.cngc(i), key=lambda j: f(a[j]) if j<len(a) else inf)  # index of the smallest child or grandchild
+        m = min(self.cngc(i), key=lambda x: f(x[1]))[0]  # index of the smallest child or grandchild
+        # m = min(self.cngc(i), key=lambda j: f(a[j]) if j<len(a) else inf)  # index of the smallest child or grandchild
         if a[m] < a[i]:
             a[m], a[i] = a[i], a[m]  # if m is a child of i, after the swap, min heap property at m is intact
             if m > i * 2 + 2:  # m is a grandchild of i
@@ -84,7 +90,8 @@ class MinMaxHeap:
         a, f = self.a, self.key
         if i * 2 + 1 >= len(a):  # i has no children
             return
-        m = max(self.cngc(i), key=lambda j: f(a[j]) if j<len(a) else -inf)  # index of the largest child or grandchild
+        m = max(self.cngc(i), key=lambda x: f(x[1]))[0]  # index of the largest child or grandchild
+        # m = max(self.cngc(i), key=lambda j: f(a[j]) if j<len(a) else -inf)  # index of the largest child or grandchild
         if a[m] > a[i]:
             a[m], a[i] = a[i], a[m]  # if m is a child of i, after the swap, max heap property at m is intact
             if m > i * 2 + 2:  # m is a grandchild of i
@@ -138,9 +145,9 @@ class MinMaxHeap:
         for i in range(ceil((n - 1) / 2)):  # the second half of heap does not have children
             assert i * 2 + 1 < len(a)
             if self.min_layer(i):
-                if any(f(a[i]) > f(a[j]) for j in self.cngc(i) if j < n):  # compare with children and grandchildren
+                if any(f(a[i]) > f(x) for _, x in self.cngc(i)):
                     return False
-            elif any(f(a[i]) < f(a[j]) for j in self.cngc(i) if j < n):
+            elif any(f(a[i]) < f(x) for _, x in self.cngc(i)):
                 return False
         return True
 
