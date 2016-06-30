@@ -39,7 +39,7 @@ def bin_search_left2(arr, x, left=0, right=None, key=identity):
             left += step
     return left + 1
 
-def bin_search_left(arr, x, left=0, right=None, key=identity):
+def bin_search_right(arr, x, left=0, right=None, key=identity):
     right = len(arr) - 1 if right is None else right - 1
     while left <= right:
         mid = (left + right) // 2

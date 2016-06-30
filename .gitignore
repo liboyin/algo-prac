@@ -2,3 +2,5 @@
 ._*
 .Spotlight*
 .Trashes
+*.pyc
+__pycache__
