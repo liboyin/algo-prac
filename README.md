@@ -1,4 +1,3 @@
 # algo-prac
-Algorithmic Practise
 
-A collection of algirithms practice.
+A collection of Algirithms Practice.

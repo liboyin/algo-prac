@@ -14,10 +14,8 @@ def argmin(iterable, key=identity, val=False):
 
 def argmax_2d(mat, val=False):
     m, n = len(mat), len(mat[0])
-    i, j = max(product(range(m), range(n)), key=lambda x: mat[x[0]][x[1]])  # lambda cannot unpack tuple in Python3
-    if val:
-        return i, j, mat[i][j]
-    return i, j
+    i, j = max(product(range(m), range(n)), key=lambda x: mat[x[0]][x[1]])  # lambda cannot unpack tuple in Python 3
+    return i, j, mat[i][j] if val else i, j
 
 def bin_search_left(arr, x, left=0, right=None, key=identity):
     right = len(arr) - 1 if right is None else right - 1
@@ -48,6 +46,14 @@ def bin_search_right(arr, x, left=0, right=None, key=identity):
         else:
             left = mid + 1
     return left
+
+def fails_as(exception, func, *args, **kwargs):  # returns whether a function throws a specified exception
+    try:
+        _ = func(*args, **kwargs)
+    except Exception as ex:
+        return isinstance(ex, exception)
+    else:  # if no exception is thrown
+        return False
 
 def filter2(func, iterable):
     ts, fs = [], []
@@ -82,19 +88,19 @@ def is_sorted(arr, key=identity):
 
 def kth_of_iter(iterable, k=0, default=None):
     """
-    Returns the kth item in an iterable, or the last element if k=0. If k > len(iterable), returns the default value.
+    Returns the kth item in an iterable, or the last element if k == 0. If k > len(iterable), returns the default value.
     :param iterable: iterable[T]
-    :param k: int. cardinal number if k != 0
+    :param k: int. cardinal number unless k == 0
     :param default: Any
     :return: Union(T, type(default))
     """
     assert k >= 0
-    k -= 1
+    k -= 1  # to ordinal number
     i, x = -1, default
     for i, x in enumerate(iterable):
         if i == k:
             return x
-    return x  # k == -1 or k > len(iterable) or empty iterator
+    return x  # covers k == -1 or k > len(iterable) or empty iterator
 
 def np_index(*idx):  # NumPy style indexing
     def index(x):
@@ -118,7 +124,7 @@ def rank(arr, distinct=True):
 def record_class(name, args, scope):
     # by design, default arguments are instantiated only once. mutable default value will cause aliasing
     code = ['class {}:'.format(name), '\tdef __init__(self, {}):'.format(args)]
-    for x in [x.split('=')[0] for x in re.split(', *', args)]:
+    for x in [x.split('=')[0] for x in re.split(',\s*', args)]:  # \s matches any whitespace chars
         code.append('\t\tself.{0} = {0}'.format(x))
     exec('\n'.join(code), scope)
     return scope[name]
