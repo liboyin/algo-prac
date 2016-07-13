@@ -23,7 +23,7 @@ def verify(seq):
 
 if __name__ == '__main__':
     from trees.construction import random_bst
-    from trees.traversal import rec_free_pre_order
+    from trees.traversal import fast_pre_order
     std_test = {(2, 4, 3): True, (2, 4, 1): False, (40, 30, 35, 80, 100): True, (40, 30, 35, 20, 80, 100): False}
     for k, v in std_test.items():
         assert verify(k) == v
@@ -32,4 +32,4 @@ if __name__ == '__main__':
         assert not verify(x)
     for size in range(1, 100):
         rnd_test = random_bst(size)
-        assert verify(rec_free_pre_order(rnd_test))
+        assert verify(fast_pre_order(rnd_test))

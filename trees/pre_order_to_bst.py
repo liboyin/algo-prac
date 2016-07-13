@@ -27,11 +27,11 @@ def rebuild(seq):
 
 if __name__ == '__main__':
     from trees.construction import random_bst
-    from trees.traversal import rec_free_pre_order, in_order, rec_free_post_order
+    from trees.traversal import fast_pre_order, in_order, fast_post_order
     def iter_equals(xs, ys):
         return all(x == y for x, y in zip(xs, ys))
     for size in range(1, 100):
         rnd_test = random_bst(size)
-        root = rebuild(rec_free_pre_order(rnd_test))
+        root = rebuild(fast_pre_order(rnd_test))
         assert iter_equals(in_order(root), in_order(rnd_test))
-        assert iter_equals(rec_free_post_order(root), rec_free_post_order(rnd_test))
+        assert iter_equals(fast_post_order(root), fast_post_order(rnd_test))

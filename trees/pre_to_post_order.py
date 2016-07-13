@@ -1,6 +1,6 @@
 from math import inf
 from trees.construction import Node
-from trees.traversal import rec_free_post_order
+from trees.traversal import fast_post_order
 
 def convert(seq):
     """
@@ -31,7 +31,7 @@ def convert(seq):
             last.right = new
             lb = last.val
         s.append(new)
-    yield from rec_free_post_order(root)
+    yield from fast_post_order(root)
 
 def convert2(seq):  # O(n^2) time solution
     it = iter(seq)
