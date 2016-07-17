@@ -44,13 +44,13 @@ def five_divisible(bits, LE=False):
     :param LE: bool. True if the input bit stream is little-endian
     :return: bool
     """
-    it = iter(bits)
+    ite = iter(bits)
     rem, mul = 0, 1
-    for x in it:
+    for x in ite:
         if LE:
-            y = (int(next(it, False)) << 1) + int(x)
+            y = (int(next(ite, False)) << 1) + int(x)
         else:
-            y = (int(x) << 1) + int(next(it, False))
+            y = (int(x) << 1) + int(next(ite, False))
         rem = (rem + y * mul) % 5
         mul *= -1
     return rem == 0

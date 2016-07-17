@@ -119,7 +119,7 @@ def kth_of_two_sorted(xs, ys, k):  # expected O(n) time
 
 def kth(arr, k):  # expected O(n) time, worst case O(n^2) time
     assert 0 < k <= len(arr)  # k is cardinal
-    lt, eq, gt = filter3(arr[len(arr)//2], arr)
+    lt, eq, gt = filter3(arr, arr[len(arr)//2])
     if k <= len(lt):
         return kth(lt, k)  # recursive call
     elif k > len(lt) + len(eq):

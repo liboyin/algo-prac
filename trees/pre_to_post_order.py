@@ -11,14 +11,14 @@ def convert(seq):
     :param seq: seq[num]
     :return: generator[num]
     """
-    it = iter(seq)
-    x = next(it, None)
+    ite = iter(seq)
+    x = next(ite, None)
     if x is None:
         return
     root = Node(None, x, None)
     s = [root]
     lb = -inf  # lower bound
-    for x in it:
+    for x in ite:
         # assert not any(y.val == lb for y in s)
         assert x > lb  # invalid input fails here
         new = Node(None, x, None)
@@ -68,5 +68,5 @@ if __name__ == '__main__':
     for x in fail_test:
         assert fails_as(AssertionError, lambda y: tuple(convert(y)), x)
     for size in range(1, 100):
-        rnd_test = random_bst(size)
-        assert list(convert(pre_order(rnd_test))) == list(post_order(rnd_test))
+        t = random_bst(size)
+        assert list(convert(pre_order(t))) == list(post_order(t))

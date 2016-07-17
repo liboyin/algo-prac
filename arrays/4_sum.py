@@ -15,15 +15,14 @@ def search(arr, target):
     d = dict()
     for i in range(n):
         for j in range(i+1, n):
-            k = arr[i] + arr[j]
-            if target - k in d:
-                for x, y in d[target-k]:
-                    if i != x and i != y and j != x and j != y:
-                        yield tuple(sorted((x, y, i, j)))
-            if k in d:
-                d[k].append((i, j))
+            s = arr[i] + arr[j]
+            for x, y in d.get(target-s, ()):
+                if i != x and i != y and j != x and j != y:
+                    yield tuple(sorted((x, y, i, j)))
+            if s in d:
+                d[s].append((i, j))
             else:
-                d[k] = [(i, j)]
+                d[s] = [(i, j)]
 
 def search2(arr, target):
     """
@@ -41,9 +40,8 @@ def search2(arr, target):
     for i in range(n):
         for j in range(i+1, n):
             a.append((i, j, arr[i] + arr[j]))
-    a.sort(key=get_item(2))
-    left = 0
-    right = len(a) - 1
+    a.sort(key=get_item(2))  # sort on the sum of pairs. this makes the algorithm highly incompatible to repetitions
+    left, right = 0, len(a) - 1
     while left < right:
         il, jl, xl = a[left]
         ir, jr, xr = a[right]
@@ -58,17 +56,17 @@ def search2(arr, target):
 
 if __name__ == '__main__':
     from random import randint
-    def control(arr, m):
+    def control(arr, target):  # brute force: O(n^4) time
         n = len(arr)
         for i in range(n):
             for j in range(i+1, n):
                 for k in range(j+1, n):
                     for l in range(k+1, n):
-                        if arr[i] + arr[j] + arr[k] + arr[l] == m:
+                        if arr[i] + arr[j] + arr[k] + arr[l] == target:
                             yield i, j, k, l
     for size in range(4, 50):
-        rnd_test = [randint(-size, size) for _ in range(size)]
-        target = randint(-size, size)
-        pool = set(control(rnd_test, target))
-        assert set(search(rnd_test, target)) == pool
-        assert set(search2(rnd_test, target)).issubset(pool)
+        a = [randint(-size, size) for _ in range(size)]
+        t = randint(-size, size)
+        pool = set(control(a, t))
+        assert set(search(a, t)) == pool
+        assert set(search2(a, t)).issubset(pool)

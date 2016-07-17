@@ -1,24 +1,24 @@
 import re
-import time
 from itertools import product, tee
 from math import floor, log2
 
 def identity(x):
     return x
 
-def argmax(iterable, key=identity, val=False):  # if multiple global max exist, returns the first one
+def argmax(iterable, key=identity, val=False):  # in accordance with max(), if multiple max exist, returns the first
     r = max(enumerate(iterable), key=lambda x: key(x[1]))
     return r if val else r[0]
 
 def argmin(iterable, key=identity, val=False):
-    return argmax(iterable, key=lambda x: -key(x), val=val)
+    r = min(enumerate(iterable), key=lambda x: key(x[1]))
+    return r if val else r[0]
 
 def argmax_2d(mat, val=False):
     m, n = len(mat), len(mat[0])
     i, j = max(product(range(m), range(n)), key=lambda x: mat[x[0]][x[1]])  # lambda cannot unpack tuple in Python 3
     return i, j, mat[i][j] if val else i, j
 
-def bin_search_left(arr, x, left=0, right=None, key=identity):
+def bin_search_left(arr, x, left=0, right=None, key=identity):  # identical to bisect_left
     right = len(arr) - 1 if right is None else right - 1
     while left <= right:
         mid = (left + right) // 2
@@ -29,16 +29,16 @@ def bin_search_left(arr, x, left=0, right=None, key=identity):
     return left
 
 def bin_search_left2(arr, x, left=0, right=None, key=identity):
-    left -= 1  # left: on the left (exclusive) of the search point
+    left -= 1  # left: off the left of the search range
     if right is None:
-        right = len(arr)  # right: on the right (exclusive) of search range
+        right = len(arr)  # right: off the right of the search range
     for step in yield_while(2 ** floor(log2(right-left)), lambda x: x > 0, lambda x: x >> 1):
         # [2 ^ floor(log_2(n)), ..., 4, 2, 1]. may include n, but not 0
         if left + step < right and key(arr[left + step]) < x:
             left += step
     return left + 1
 
-def bin_search_right(arr, x, left=0, right=None, key=identity):
+def bin_search_right(arr, x, left=0, right=None, key=identity):  # identical to bisect_right
     right = len(arr) - 1 if right is None else right - 1
     while left <= right:
         mid = (left + right) // 2
@@ -65,12 +65,12 @@ def filter2(func, iterable):
             fs.append(x)
     return ts, fs
 
-def filter3(pivot, iterable, func=identity):
+def filter3(iterable, pivot, key=identity):
     lt, eq, gt = [], [], []
     for x in iterable:
-        if func(x) < pivot:
+        if key(x) < pivot:
             lt.append(x)
-        elif func(x) > pivot:
+        elif key(x) > pivot:
             gt.append(x)
         else:
             eq.append(x)
@@ -130,11 +130,7 @@ def record_class(name, args, scope):
     exec('\n'.join(code), scope)
     return scope[name]
 
-def remove_duplicates(iterable):
-    # side note: duplication removal on array must be performed backwards:
-    # for i in rev_range(len(arr) - 1):
-    #     if arr[i] == arr[i+1]:
-    #         del arr[i]  # O(n^2) time in total
+def remove_duplicates(iterable):  # side note: duplication removal on array must be performed backwards
     it = iter(iterable)
     prev = next(it)  # if iterable is empty, raises StopIteration
     yield prev

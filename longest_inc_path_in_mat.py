@@ -7,7 +7,7 @@ def search(mat):
     :param mat: list[list[num]]
     :return: int
     """
-    def query(i, j, d_to):
+    def query(i, j, d_to):  # i, j: current location; d_to: (i, j) += dirs[d_to]
         if not (0 <= i < m and 0 <= j < n):  # invalid location
             return 0
         if dp[i][j][d_to] > 0:  # already explored
@@ -16,15 +16,15 @@ def search(mat):
         if not (0 <= i_to < m and 0 <= j_to < n):  # invalid target
             dp[i][j][d_to] = 1
             return 1
-        if mat[i_to][j_to] - mat[i][j] > 0:  # modify here to change the path property
-            x = 1 + max([query(i_to, j_to, d) for d in range(4) if d != 3 - d_to])
-            # recursive call to all 3 directions except for coming back
+        if mat[i_to][j_to] - mat[i][j] > 0:
+            x = 1 + max([query(i_to, j_to, d) for d in range(4) if d != 3 - d_to])  # recursive call to all directions
+            # except for coming back. note that each cell may be accessed many times, but is only written once
             dp[i][j][d_to] = x
             return x
         else:  # function call shall not pass
             dp[i][j][d_to] = 1
             return 1
-    dirs = [(0, -1), (-1, 0), (1, 0), (0, 1)]  # left, up, down, right
+    dirs = [(0, -1), (-1, 0), (1, 0), (0, 1)]  # left, up, down, right. reverse of dirs[i] is dirs[3-i]
     m = len(mat)
     if m == 0:
         return 0

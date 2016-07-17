@@ -66,7 +66,7 @@ if __name__ == '__main__':
     def iter_equals(xs, ys):
         return all(x == y for x, y in zip(xs, ys))
     for size in range(1, 100):
-        rt = random_bst(size)
-        assert iter_equals(pre_order(rt), fast_pre_order(rt))
-        assert iter_equals(in_order(rt), fast_in_order(rt))
-        assert iter_equals(post_order(rt), fast_post_order(rt))
+        t = random_bst(size)
+        assert iter_equals(pre_order(t), fast_pre_order(t))
+        assert iter_equals(in_order(t), fast_in_order(t))
+        assert iter_equals(post_order(t), fast_post_order(t))

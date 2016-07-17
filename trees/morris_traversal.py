@@ -36,8 +36,8 @@ def in_order(root):
 def post_order(root):
     """
     Traverse a tree post-order without recursion or stack.
-    The solution is based on Morris in-order retrieval. When a node x is visited the second time, nodes on the path from
-        x.left to predecessor(x) (inclusive start & finish) are yielded in reversed order.
+    The solution is based on Morris in-order retrieval. When a node x is visited the second time, nodes on the path
+        from x.left to predecessor(x) (inclusive start & finish) are yielded in reversed order.
     Time complexity is O(n). Space complexity is O(1).
     :param root: Node[T]
     :return: generator[T]
