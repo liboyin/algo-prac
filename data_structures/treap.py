@@ -107,12 +107,6 @@ class Node:
                 return True if (self.left is None or self.right is None) else self.left.key < self.right.key
         return False
 
-    def min_max_depth(self):
-        assert self is not self.pseudo_root
-        left_min, left_max = (0, 0) if self.left is None else self.left.min_max_depth()
-        right_min, right_max = (0, 0) if self.right is None else self.right.min_max_depth()
-        return min(left_min, right_min) + 1, max(left_max, right_max) + 1
-
 class Treap:
     def __init__(self):
         self.pseudo_root = Node(key=Infinity(), val=None, priority=inf)
@@ -206,12 +200,6 @@ class Treap:
         if self.size == 0:
             return True
         return self.pseudo_root.left.verify()
-
-    def min_max_depth(self):
-        # with 1000 elements in [0, 1000], the min/max depth stabilises at ~(5, 20)
-        if self.size == 0:
-            return 0, 0
-        return self.pseudo_root.left.min_max_depth()
 
 if __name__ == '__main__':
     from random import shuffle

@@ -14,7 +14,6 @@ def convert(seq):
     it = iter(seq)
     x = next(it, None)
     if x is None:
-        yield from ()
         return
     root = Node(None, x, None)
     s = [root]
@@ -37,7 +36,6 @@ def convert2(seq):  # O(n^2) time solution
     it = iter(seq)
     x = next(it, None)
     if x is None:  # empty iterator
-        yield from ()
         return
     path = [Node(None, x, None)]  # path from root to cursor
     for x in it:  # start iteration from seq[1]

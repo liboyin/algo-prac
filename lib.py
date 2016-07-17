@@ -1,4 +1,5 @@
 import re
+import time
 from itertools import product, tee
 from math import floor, log2
 
@@ -142,7 +143,7 @@ def remove_duplicates(iterable):
             yield x
             prev = x
 
-def replace_multi(text, rep):  # rep: dict[str, str]. from_test -> to_text
+def batch_replace(text, rep):  # rep: dict[str, str]. from_test -> to_text
     rx = re.compile('|'.join(map(re.escape, rep.keys())))
     return rx.sub(lambda x: rep[x.group(0)], text)  # re.sub accepts function as pattern
 
