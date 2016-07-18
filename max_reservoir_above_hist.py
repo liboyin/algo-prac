@@ -1,6 +1,6 @@
 from math import ceil, inf, log2
 
-class SumTree:
+class SumTree:  # ref: max_rectangle_under_hist.MinIndexRangeTree
     def __init__(self, arr):  # O(n) time & space
         def build(left, right, i):
             if left == right:
@@ -27,7 +27,6 @@ class SumTree:
             mid = (sl + sr) // 2
             q_left = query(sl, mid, i * 2 + 1)  # recursive call
             q_right = query(mid + 1, sr, i * 2 + 2)  # recursive call
-            # print('return = {}'.format(q_left + q_right))
             return q_left + q_right
         if (left, right) in self.cache:
             return self.cache[(left, right)]
@@ -35,7 +34,7 @@ class SumTree:
         self.cache[(left, right)] = r
         return r
 
-def next_geq(arr):
+def next_geq(arr):  # ref: next_greater.py
     s = [0]
     r = [None] * len(arr)
     for i, x in enumerate(arr[1:], start=1):
@@ -44,40 +43,41 @@ def next_geq(arr):
         s.append(i)
     return r
 
-def search(hist):  # TODO: add documents
+def search(hist):
     def qrs(i, j):  # safely query range sum
         if 0 <= i < n and 0 <= j < n and i <= j:
             return st.get_sum(i, j)
         return 0
     def volume(i):
-        j = left_geq[i]  # j: index of the left geq
-        left = 0 if j is None else (i-j-1) * min(hist[j], hist[i]) - qrs(j + 1, i - 1)
-        j = right_geq[i]  # j: index of the right geq
-        right = 0 if j is None else (j-i-1) * min(hist[j], hist[i]) - qrs(i + 1, j - 1)
-        return max(left, right)
-    hist = [inf] + hist + [inf]
+        j_left = left_geq[i]  # j_left: index of the first geq on the left
+        v_left = (i - j_left - 1) * min(hist[j_left], hist[i]) - qrs(j_left + 1, i - 1)
+        # i - j_left - 1: number of gaps between j_left and i (exclusive); qrs(j_left + 1, i - 1): sum(hist[j_left+1:i])
+        j_right = right_geq[i]  # j_right: index of the first geq on the right
+        v_right = (j_right - i - 1) * min(hist[j_right], hist[i]) - qrs(i + 1, j_right - 1)
+        # j_right - i - 1: number of gaps between i and j_right (exclusive); qrs(i + 1, j_right - 1): sum(hist[i+1:j_right])
+        return max(v_left, v_right)
+    hist = [inf] + hist + [inf]  # bound left & right
     n = len(hist)
     if n <= 3:
         return 0
     left_geq = next_geq(hist[::-1])
     left_geq.reverse()
-    for i, x in enumerate(left_geq):
-        if x is not None:
-            left_geq[i] = n - 1 - x  # undo reverse for each element
-    right_geq = next_geq(hist)
+    for i, x in enumerate(left_geq[1:], start=1):  # for all i except i == 0, left_geq[i] is not None
+        left_geq[i] = n - 1 - x  # undo reverse for each element
+    right_geq = next_geq(hist)  # for all i except i == n - 1, right_geq[i] is not None
     st = SumTree(hist)
     return max(volume(i) for i in range(1, n-1))
 
-if __name__ == '__main__':  # TODO
+if __name__ == '__main__':
     from lib import rev_range
     from random import randint
     def control(hist):  # brute force: O(n^2) time
         hist = [inf] + hist + [inf]
         max_vol, n = 0, len(hist)
         for i, x in enumerate(hist[1:-1], start=1):
-            i_left = next((j for j in rev_range(i) if hist[j] >= x), 0)  # index of the first greater on the left
+            i_left = next((j for j in rev_range(i) if hist[j] >= x), 0)  # index of the first geq on the left
             v_left = min(x, hist[i_left]) * (i-i_left-1) - sum(hist[i_left+1:i])
-            i_right = next((j for j in range(i+1, n) if hist[j] >= x), n - 1)  # index of the first greater on the right
+            i_right = next((j for j in range(i+1, n) if hist[j] >= x), n - 1)  # index of the first geq on the right
             v_right = min(x, hist[i_right]) * (i_right-i-1) - sum(hist[i+1:i_right])
             max_vol = max(max_vol, v_left, v_right)
         return max_vol

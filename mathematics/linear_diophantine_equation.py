@@ -7,13 +7,14 @@ def ext_euclid(a, b):
     """
     if b == 0:
         return 1, 0, a
-    x, y, q = ext_euclid(b, a % b)
-    x, y = y, (x - (a // b) * y)
+    div, rem = divmod(a, b)
+    x, y, q = ext_euclid(b, rem)
+    x, y = y, (x - div * y)
     return x, y, q
 
 def linear_diophantine_equation(a, b, c):
     """
-    Finds integer x & y, s.t. a * x + b * y == c. Returns None, None if solution does not exist.
+    Finds integer x & y, s.t. a * x + b * y == c. Returns (None, None) if solution does not exist.
     Observation: Solution to a linear diophantine equation exists iff gcd(a, b) divides c.
     :param a: int
     :param b: int

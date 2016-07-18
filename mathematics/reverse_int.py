@@ -10,7 +10,7 @@ def reverse_int(x):
     return y // 10
 
 if __name__ == '__main__':
-    from random import randint, choice
+    from random import randint
     for _ in range(10000):
         rnd_test = randint(-1<<64, 1<<64)
         control = '-' + str(-rnd_test)[::-1] if rnd_test < 0 else str(rnd_test)[::-1]

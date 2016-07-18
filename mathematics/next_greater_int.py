@@ -51,14 +51,14 @@ def next_smaller(x):
     return None if a is None else arr_to_int(9 - y for y in a)
 
 if __name__ == '__main__':
-    x = -12321
-    while True:
-        print(x)
-        ns = next_greater(x)
-        if ns is None:
-            break
-        else:
-            x = ns
-    while x is not None:
-        print(x)
-        x = next_smaller(x)
+    from collections import Counter
+    def control(x):  # does not handle cases when x does not have a next greater number
+        d = Counter(str(x))
+        y = x + 1
+        while Counter(str(y)) != d:
+            y += 1
+        return y
+    for x in range(100):
+        ng = next_greater(x)
+        if ng is not None:
+            assert ng == control(x)

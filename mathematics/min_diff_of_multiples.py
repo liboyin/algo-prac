@@ -1,5 +1,5 @@
 def gcd(x, y):
-    while y > 0:  # x >= y is not necessary: x < y -> x % y == x
+    while y > 0:
         x, y = y, x % y
     return x
 
@@ -8,8 +8,9 @@ def search(a, b, x, y):
     Consider the infinite sequence of am + x: [a+x, 2a+x, ..., ab+x, ...], and of bn + y: [b+y, 2b+y, ..., ab+y, ...].
     Returns the minimum absolute difference between any pair of elements, i.e. min(abs((am + x) - (bn + y))).
     Observation:
-    min(abs((am + x) - (bn + y))) = min(abs((x - y) + (am - bn))). (am - bn) is any linear combination of a and b.
-    The set of linear combinations of a and b equals the set of multiples of gcd(a, b).
+    1. min(abs((am + x) - (bn + y))) = min(abs((x - y) + (am - bn))).
+    2. (am - bn) is an arbitrary linear combination of a and b.
+    3. The set of linear combinations of a and b equals the set of multiples of gcd(a, b).
     :param a: int, positive
     :param b: int, positive
     :param x: int, non-negative
@@ -22,5 +23,5 @@ def search(a, b, x, y):
     diff = abs(x - y) % g
     return min(diff, g - diff)
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # TODO: more test cases?
     assert search(a=6, b=16, x=5, y=2) == 1

@@ -42,11 +42,7 @@ def convert(s, n):
 
 if __name__ == '__main__':
     s = 'PAYPALISHIRING'
-    std_test = {1: 'PAYPALISHIRING',
-                2: 'PYAIHRNAPLSIIG',
-                3: 'PAHNAPLSIIGYIR',
-                4: 'PINALSIGYAHRPI',
-                5: 'PHASIYIRPLIGAN'}
+    std_test = {1: 'PAYPALISHIRING', 2: 'PYAIHRNAPLSIIG', 3: 'PAHNAPLSIIGYIR', 4: 'PINALSIGYAHRPI', 5: 'PHASIYIRPLIGAN'}
     for k, v in std_test.items():
         assert convert(s, k) == v
     # n=2:

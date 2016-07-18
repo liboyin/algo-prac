@@ -28,6 +28,6 @@ def is_bleak(x):
             return False
     return True
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # TODO: find a list of bleak numbers
     for i in range(1, 100):
         print(i, is_bleak(i))

@@ -12,9 +12,9 @@ def eratosthenes(n):
     """
     assert n > 0
     a = [True] * (n + 1)  # it is further possible to remove all even numbers
-    a[0] = a[1] = False
+    a[0] = a[1] = False  # by definition
     for i in range(2, ceil(sqrt(n)) + 1):  # sqrt(n) leads to \log\log time complexity
-        if a[i]:  # if a[i] is a known non-prime, then its multiples have been labeled already
+        if a[i]:  # if a[i] is a known non-prime, then its multiples have been labeled non-prime already
             for j in range(2, n // i + 1):
                 a[i * j] = False
     return filter_index(identity, a)
@@ -25,6 +25,7 @@ def legendre(p, n):
     Observation: In [1, n], n // p integers divide p, n // p^2 integers divide p^2, ...
     This algorithm does not work if p is not a prime, as p * f divides p for all factors f of p.
     Time complexity is O(n/p). Space complexity is O(n).
+    Side note: This is the solution to question "how many tailing 0s there are in 100 factorial?".
     :param p: int, p >= 2
     :param n: int, positive
     :return: int
@@ -39,9 +40,9 @@ def legendre(p, n):
 def search(n):
     """
     Returns number of factors of n!, including 1 and n! itself.
-    Observation: The set of primal factors of n! equals the set of primes in [2, n]. For each primal factor, denoted by p,
-        let x be the maximum integer, s.t. p ^ x divides n!. Then p may appear in any factor of n! in the form of p ^ i,
-        where i in [0, x].
+    Observation: The set of primal factors of n! equals the set of primes in [2, n]. For each primal factor, denoted
+        by p, let x be the maximum integer, s.t. p ^ x divides n!. Then p may appear in any factor of n! in the form
+        of p ^ i, where i in [0, x].
     :param n: int, positive
     :return: int
     """
