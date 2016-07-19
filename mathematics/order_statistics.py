@@ -104,7 +104,6 @@ def median_of_two_sorted(xs, ys):
     return (left_median + right_median) / 2
 
 def kth_of_two_sorted(xs, ys, k):  # expected O(n) time
-    assert is_sorted(xs) and is_sorted(ys)
     assert 0 < k <= len(xs) + len(ys)
     if len(xs) == 0:
         return ys[k - 1]
@@ -117,7 +116,7 @@ def kth_of_two_sorted(xs, ys, k):  # expected O(n) time
         return kth_of_two_sorted(xs[h:], ys, k - h)  # recursive call
     return kth_of_two_sorted(xs, ys[h:], k - h)  # recursive call
 
-def kth(arr, k):  # expected O(n) time, worst case O(n^2) time
+def kth(arr, k):  # expected O(n) time
     assert 0 < k <= len(arr)  # k is cardinal
     lt, eq, gt = filter3(arr, arr[len(arr)//2])
     if k <= len(lt):

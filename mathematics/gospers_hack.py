@@ -1,7 +1,7 @@
 def gospers_hack(n):
     """
     HAKMEM 175, or Gosper's Hack:
-    Returns the next smallest integer with the same number of 1-bits, i.e. the next bit string permutation.
+    Returns the next integer with the same number of 1-bits, i.e. the next bit string permutation.
     :param n: int, positive
     :return: int, positive
     """

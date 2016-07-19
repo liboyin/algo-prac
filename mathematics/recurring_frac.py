@@ -9,14 +9,14 @@ def search(a, b):
     :return: str
     """
     div = ''
-    d = dict()  # dict[int,int]: from remainder to rem//b in div
+    d = dict()  # dict[int,int]: remainder -> index of (rem // b) in div
     rem = a % b
-    while rem not in d:  # removed rem != 0
+    while rem not in d:
         d[rem] = len(div)
         rem *= 10
         div += str(rem // b)
         rem %= b
-    return 0 if rem == 0 else div[d[rem]:]
+    return '0' if rem == 0 else div[d[rem]:]
 
 if __name__ == '__main__':
     assert search(1, 4) == '0'

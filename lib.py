@@ -18,6 +18,10 @@ def argmax_2d(mat, val=False):
     i, j = max(product(range(m), range(n)), key=lambda x: mat[x[0]][x[1]])  # lambda cannot unpack tuple in Python 3
     return i, j, mat[i][j] if val else i, j
 
+def batch_replace(text, rep):  # rep: dict[str, str]. from_test -> to_text
+    rx = re.compile('|'.join(map(re.escape, rep.keys())))
+    return rx.sub(lambda x: rep[x.group(0)], text)  # re.sub accepts function as pattern
+
 def bin_search_left(arr, x, left=0, right=None, key=identity):  # identical to bisect_left
     right = len(arr) - 1 if right is None else right - 1
     while left <= right:
@@ -138,10 +142,6 @@ def remove_duplicates(iterable):  # side note: duplication removal on array must
         if x != prev:
             yield x
             prev = x
-
-def batch_replace(text, rep):  # rep: dict[str, str]. from_test -> to_text
-    rx = re.compile('|'.join(map(re.escape, rep.keys())))
-    return rx.sub(lambda x: rep[x.group(0)], text)  # re.sub accepts function as pattern
 
 def rev_enumerate(iterable):
     return reversed(list(enumerate(iterable)))
