@@ -27,10 +27,9 @@ def rebuild(seq):
     return root
 
 if __name__ == '__main__':
+    from lib import iter_equals
     from trees.construction import random_bst
     from trees.traversal import fast_pre_order, in_order, fast_post_order
-    def iter_equals(xs, ys):
-        return all(x == y for x, y in zip(xs, ys))
     for size in range(1, 100):
         t = random_bst(size)
         r = rebuild(fast_pre_order(t))

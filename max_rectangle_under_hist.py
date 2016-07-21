@@ -49,7 +49,7 @@ def search(hist):
 if __name__ == '__main__':
     from lib import rev_range
     from random import randint
-    def control(hist):  # brute force: O(n^2) time
+    def control(hist):  # O(n^2)
         max_rec, n = 0, len(hist)
         for i, x in enumerate(hist):
             left = next((j for j in rev_range(i) if hist[j] < x), -1)

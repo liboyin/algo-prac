@@ -60,5 +60,5 @@ def subsequence2(arr):  # not as elegant, but same time complexity
             d[x] = x, x
     return max(right - left + 1 for left, right in d.values())
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # TODO: random test?
     print(subsequence2([36, 41, 56, 35, 44, 33, 34, 92, 43, 32, 42]))

@@ -1,5 +1,4 @@
-from itertools import product
-from lib import stated_map
+from lib import argmax, stated_map
 
 def search(arr):  # Kadane's algorithm
     # key observation:
@@ -24,31 +23,23 @@ def search2(arr):  # Kadane's algorithm with reconstruction. constant space
             if acc > max_range[2]:
                 max_range = start, i, acc
     if max_range[2] > 0:
-        return arr[max_range[0]: max_range[1] + 1]
-    return [max(arr)]
+        return max_range
+    i, x = argmax(arr, val=True)
+    return i, i, x
 
-def search2d(arr, k):  # max sum subarray with size k * k. O(n^2) time & space
-    def q(i, j):
-        if i < 0 or j < 0:
-            return 0
-        return a[i][j]
-    assert k > 0
-    m, n = len(arr), len(arr[0])
-    assert m >= k and n >= k
-    a = [[0] * n for _ in range(m)]
-    for i in range(m):
-        for j in range(n):
-            a[i][j] = q(i-1, j) + q(i, j-1) - q(i-1, j-1) + arr[i][j]
-    for i in range(k-1, m):
-        for j in range(k-1, n):
-            a[i][j] -= q(i-k, j) + q(i, j-k) - q(i-k, j-k)
-    max_i, max_j = max(product(range(k-1, m), range(k-1, n)), key=lambda x: a[x[0]][x[1]])
-    return max_i - k + 1, max_j - k + 1, a[max_i][max_j]
-
-if __name__ == '__main__':  # TODO: random test?
-    print(search2([-2, -3, 4, -1, -2, 1, 5, -3]))
-    m = [[1, 2, -1, 4],
-         [-8, -3, 4, 2],
-         [3, 8, 10, -8],
-         [-4, -1, 1, 7]]
-    print(search2d(m, 3))
+if __name__ == '__main__':
+    from random import randint
+    def control(arr):  # O(n^3)
+        n = len(arr)
+        i, x = argmax(arr, val=True)
+        max_range = i, i, x
+        for i in range(n):
+            for j in range(i, n):
+                s = sum(arr[i:j+1])
+                if s > max_range[2]:
+                    max_range = i, j, s
+        return max_range
+    assert search2([-2, -3, 4, -1, -2, 1, 5, -3]) == (2, 6, 7)
+    for size in range(1, 100):
+        a = [randint(-size, size) for _ in range(size)]
+        assert search(a) == search2(a)[2] == control(a)[2]

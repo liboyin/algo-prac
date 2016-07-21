@@ -26,13 +26,15 @@ def bin_search_left(arr, x, left=0, right=None, key=identity):  # identical to b
     right = len(arr) - 1 if right is None else right - 1
     while left <= right:
         mid = (left + right) // 2
+        # side note: left + right may overflow in other languages. in such case, use left + (right - left) // 2 instead
         if x <= key(arr[mid]):
             right = mid - 1
         else:
             left = mid + 1
     return left
 
-def bin_search_left2(arr, x, left=0, right=None, key=identity):
+def bin_search_left2(arr, x, left=0, right=None, key=identity):  # appeared in Jon Bentley's Programming Pearls sec 9.3
+    # TODO: empirically test against normal binary search for speed
     left -= 1  # left: off the left of the search range
     if right is None:
         right = len(arr)  # right: off the right of the search range
@@ -90,6 +92,9 @@ def is_pairwise_distinct(arr, key=identity):
 
 def is_sorted(arr, key=identity):
     return all(key(x) <= key(y) for x, y in sliding_window(arr, 2))
+
+def iter_equals(xs, ys):
+    return all(x == y for x, y in zip(xs, ys))
 
 def kth_of_iter(iterable, k=0, default=None):
     """

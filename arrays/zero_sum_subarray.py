@@ -33,5 +33,5 @@ if __name__ == '__main__':
     for arr in std_test:
         assert set(search(arr)) == set(control(arr))
     for size in range(100):
-        rnd_test = [randint(-size, size) for _ in range(size)]
-        assert set(search(rnd_test)) == set(control(rnd_test))
+        a = [randint(-size, size) for _ in range(size)]
+        assert set(search(a)) == set(control(a))

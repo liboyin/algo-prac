@@ -1,4 +1,3 @@
-from lib import safe_query
 from math import inf
 
 def all_local_max(arr):
@@ -10,20 +9,24 @@ def all_local_max(arr):
     :return: generator[int]
     """
     def q(i):
-        return safe_query(arr, i, -inf)
+        if 0 <= i < len(arr):
+            return arr[i]
+        return -inf
     return filter(lambda i: q(i-1) < q(i) > q(i+1), range(len(arr)))
 
 def any_local_max(arr):
     """
-    At least one local max exist iff arr is locally distinct.
+    At least one local max exist iff arr is pairwise distinct. (Note that asserting so requires linear time.)
     If multiple local max exist, there is no guarantee on which one is returned.
     Time complexity is O(\log n). Space complexity is O(1).
     :param arr: list[num]. must be locally distinct, unless len(arr) == 1
     :return: int
     """
+    assert len(arr) > 0
     def q(i):
-        return safe_query(arr, i, -inf)
-    assert len(arr) == 0
+        if 0 <= i < len(arr):
+            return arr[i]
+        return -inf
     left, right = 0, len(arr) - 1
     while left <= right:
         mid = (left + right) // 2
@@ -40,7 +43,7 @@ def longest_alternating_subsequence(arr):
     """
     A local min satisfies arr[i-1] > arr[i] < arr[i+1], for 1 <= i < n-1. For 0 and n-1, consider one side only.
     Returns a list of indices of all local min & max in arr. Note that a local min is always followed by a local max,
-    and vice versa. Hence, such a list is also the longest alternating subsequence of arr.
+        and vice versa. Hence, such a list is also the longest alternating subsequence of arr.
     Time complexity is O(n). Space complexity is O(n).
     :param arr: list[num]
     :return: list[int]
@@ -65,13 +68,15 @@ def longest_alternating_subsequence(arr):
 if __name__ == '__main__':  # for problems on local min/max, take extra care on repetitions
     from lib import remove_duplicates
     from random import randint
-    for _ in range(10000):
+    for _ in range(1000):
         def q(i):
-            return safe_query(rnd_test, i, -inf)
-        rnd_test = list(remove_duplicates(randint(-100, 100) for _ in range(100)))
-        any_lm = any_local_max(rnd_test)
-        all_lm = list(all_local_max(rnd_test))
-        las = longest_alternating_subsequence(rnd_test)
+            if 0 <= i < len(a):
+                return a[i]
+            return -inf
+        a = list(remove_duplicates(randint(-100, 100) for _ in range(100)))
+        any_lm = any_local_max(a)
+        all_lm = list(all_local_max(a))
+        las = longest_alternating_subsequence(a)
         assert any_lm in all_lm
         assert any_lm in las
         for i in all_lm:

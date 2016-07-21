@@ -1,6 +1,3 @@
-from lib import stated_map
-from operator import add
-
 def search(arr):
     """
     Returns the number of subarrays with even sum.
@@ -34,5 +31,5 @@ if __name__ == '__main__':
     for k, v in std_test.items():
         assert search(k) == v
     for size in range(100):
-        rnd_test = [randint(0, 100) for _ in range(size)]
-        assert search(rnd_test) == control(rnd_test)
+        a = [randint(0, 100) for _ in range(size)]
+        assert search(a) == control(a)

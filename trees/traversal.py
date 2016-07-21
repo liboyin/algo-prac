@@ -62,9 +62,8 @@ def fast_post_order(root):
             s.pop()
 
 if __name__ == '__main__':
+    from lib import iter_equals
     from trees.construction import random_bst
-    def iter_equals(xs, ys):
-        return all(x == y for x, y in zip(xs, ys))
     for size in range(1, 100):
         t = random_bst(size)
         assert iter_equals(pre_order(t), fast_pre_order(t))

@@ -56,7 +56,7 @@ def search2(arr, target):
 
 if __name__ == '__main__':
     from random import randint
-    def control(arr, target):  # brute force: O(n^4) time
+    def control(arr, target):  # O(n^4)
         n = len(arr)
         for i in range(n):
             for j in range(i+1, n):
