@@ -1,28 +1,48 @@
-from lib import bin_search_right, safe_query
+from lib import bin_search_right
 from operator import itemgetter as get_item
 
 def search(arr):
     """
-    Given a list of tasks, represented as tuple of starting time, finishing time, and value.
-    Selects tasks maximising total value, s.t. finishing time of task i is no later than the starting time of task i+1.
+    Given a list of tasks, represented as tuple of starting time, finishing time, and profit. Find the maximum profit
+        achievable by choosing non-conflicting tasks.
     Solution is binary search on tasks sorted by finishing time.
     Time complexity is O(n\log n). Space complexity is O(n).
-    :param arr: list[tuple[num,num,num]]
+    :param arr: list[tuple[num,num,num]]. requires unique finishing time & positive profit
     :return: num
     """
     n = len(arr)
     if n == 0:
         return 0
     a = sorted(arr, key=get_item(1))  # sort on finishing time
-    dp = [0] * n  # dp[i]: max profit executing task i, having considered a[:i]
-    dp[0] = a[0][2]
-    for i, x in enumerate(a[1:], start=1):
+    dp = [0]  # dp[i]: max profit considering a[:i]. when finished, len(dp) == n + 1
+    for i, x in enumerate(a):
         start, _, val = x
-        prev = bin_search_right(a, start, right=i, key=get_item(1))
-        # prev: index (in arr) of the last task that has finished before the starting time of this one
-        dp[i] = safe_query(dp, prev-1, 0) + val  # if prev == 0, no task finishes before the starting time of this one
-    return max(dp)
+        j = bin_search_right(a, start, right=i, key=get_item(1)) - 1
+        # j: index (in arr) of the last task that has finished before the starting time of this one
+        if j == -1:  # no task finishes before the starting time of this one
+            dp.append(max(dp[-1], val))  # carry over from the previous, or create new sequence of tasks
+        else:
+            dp.append(max(dp[-1], dp[j+1] + val))  # j + 1 is the index of j in dp
+    return dp[-1]
 
-if __name__ == '__main__':  # TODO: random test?
-    assert search([(3, 10, 20), (1, 2, 50), (6, 19, 100), (10, 100, 200)]) == 270
-    assert search([(3, 10, 20), (1, 2, 50), (6, 19, 100), (2, 100, 200)]) == 250
+if __name__ == '__main__':
+    from itertools import product
+    from lib import sliding_window
+    from math import inf
+    from random import randint
+    def control(arr):  # O(n 2^n)
+        n, val_max = len(arr), -inf
+        for mask in product(*([(0, 1)] * n)):
+            a = sorted([x for x, y in zip(arr, mask) if y], key=get_item(0))  # selected tasks, sorted by starting time
+            if all(x[1] <= y[0] for x, y in sliding_window(a, 2)):
+                val_max = max(val_max, sum(map(get_item(2), a)))
+        return val_max
+    for k, v in {((3, 10, 20), (1, 2, 50), (6, 19, 100), (10, 100, 200)): 270,
+                 ((3, 10, 20), (1, 2, 50), (6, 19, 100), (2, 100, 200)): 250}.items():
+        assert search(k) == v
+    for size in range(15):
+        a = []
+        for _ in range(size):
+            start = randint(0, size)
+            a.append((start, randint(start+1, size*2), randint(0, size*2)))
+        assert search(a) == control(a)

@@ -82,6 +82,30 @@ def filter3(iterable, pivot, key=identity):
             eq.append(x)
     return lt, eq, gt
 
+def filter3_inplace(arr, pivot, key=identity):
+    """
+    Performs filter3 in-place, but not stable. Returns separators i & j, s.t.:
+        key(arr[:i]) < pivot; key(arr[i:j]) == pivot; key(arr[j:]) > pivot
+    :param arr: list[T]
+    :param pivot: K
+    :param key: function[T, k]
+    :return: tuple[int,int]
+    """
+    i, j, k = 0, 0, len(arr)  # key(arr[:i]) < pivot; key(arr[i:j]) == pivot; key(arr[k:]) > pivot
+    while j < k:
+        x = key(arr[j])
+        if x < pivot:
+            arr[i], arr[j] = arr[j], arr[i]  # swap x with the leftmost 1
+            i += 1
+            j += 1
+        elif x == pivot:
+            j += 1
+        else:
+            arr[j], arr[k-1] = arr[k-1], arr[j]  # swap x with the rightmost unprocessed
+            k -= 1
+    # assert j == k
+    return i, j
+
 def filter_index(func, iterable, start=0):
     for i, x in enumerate(iterable):
         if func(x):
