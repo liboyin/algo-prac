@@ -3,6 +3,12 @@ from itertools import product
 from math import inf
 
 def search(mat):
+    """
+    Finds the submatrix with the max sum.
+    Time complexity is O(n^3). Space complexity is O(n).
+    :param mat: list[list[num]]
+    :return:  tuple[int,int,int,int,num]. up, down, left, right coordinate of the submatrix and its sum
+    """
     m = len(mat)
     if m == 0:
         return 0
@@ -24,11 +30,11 @@ def search(mat):
 
 def search_k(mat, k):
     """
-    Finds the sum of the k * k submatrix with the max sum.
+    Finds the k * k submatrix with the max sum.
     Time complexity is O(n^2). Space complexity is O(n^2).
-    :param mat: list[list[num]], non-empty
+    :param mat: list[list[num]]
     :param k: int, positive
-    :return: num
+    :return: tuple[int,int,num]. top-left coordinate of the submatrix and its sum
     """
     def q(i, j):
         if i < 0 or j < 0:
@@ -48,7 +54,7 @@ def search_k(mat, k):
         x = s[i][j] - q(i-k, j) - q(i, j-k) + q(i-k, j-k)
         if x > s_max:
             i_max, j_max, s_max = i, j, x
-    return i_max, j_max, s_max
+    return i_max-k+1, j_max-k+1, s_max
 
 if __name__ == '__main__':
     from random import randint
@@ -64,6 +70,7 @@ if __name__ == '__main__':
         for i, j in product(range(len(mat)-k+1), range(len(mat[0])-k+1)):  # i, j: top-left corner of submatrix
             s_max = max(s_max, sum(mat[i+ii][j+ji] for ii, ji in product(range(k), range(k))))
         return s_max
+    assert search(((2, 1, -3, -4, 5), (0, 6, 3, 4, 1), (2, -2, -1, 4, -5), (-3, 3, 1, 0, 3))) == (1, 3, 1, 3, 18)
     for k, v in {(((1, 2, -1, 4), (-8, -3, 4, 2), (3, 8, 10, -8), (-4, -1, 1, 7)), 3): 20,
                  (((-2, 2), (1, -2), (3, -1), (2, -3)), 1): 3}.items():
         assert search_k(*k)[-1] == v

@@ -1,3 +1,4 @@
+import random
 import re
 from itertools import product, tee
 from math import floor, log2
@@ -111,6 +112,9 @@ def filter_index(func, iterable, start=0):
         if func(x):
             yield i + start
 
+def fst(x):
+    return x[0]
+
 def is_pairwise_distinct(arr, key=identity):
     return all(key(x) != key(y) for x, y in sliding_window(arr, 2))
 
@@ -184,6 +188,20 @@ def safe_query(arr, i, default):
     if i < 0 or i >= len(arr):
         return default
     return arr[i]
+
+def snd(x):
+    return x[1]
+
+def sorted_randints(lower, upper, n):
+    m = upper - lower + 1
+    assert m >= n
+    r = []
+    for x in range(lower, upper+1):
+        if random.random() <= n / m:  # equivalent to random.randint(0, m - 1) <= n, but the latter is much slower
+            r.append(x)
+            n -= 1
+        m -= 1
+    return r
 
 def stated_map(func, iterable, state):
     for x in iterable:
