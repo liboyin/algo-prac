@@ -192,17 +192,6 @@ def safe_query(arr, i, default):
 def snd(x):
     return x[1]
 
-def sorted_randints(lower, upper, n):
-    m = upper - lower + 1
-    assert m >= n
-    r = []
-    for x in range(lower, upper+1):
-        if random.random() <= n / m:  # equivalent to random.randint(0, m - 1) <= n, but the latter is much slower
-            r.append(x)
-            n -= 1
-        m -= 1
-    return r
-
 def stated_map(func, iterable, state):
     for x in iterable:
         state = func(x, state)
@@ -214,6 +203,17 @@ def sliding_window(iterable, size):
         for _ in range(i):
             next(iters[i], None)
     return zip(*iters)
+
+def unique_randints(lower, upper, n):
+    m = upper - lower + 1
+    assert m >= n
+    r = []
+    for x in range(lower, upper+1):
+        if random.random() <= n / m:  # equivalent to random.randint(0, m - 1) <= n, but the latter is much slower
+            r.append(x)
+            n -= 1
+        m -= 1
+    return r
 
 def yield_while(state, term, next):
     while term(state):

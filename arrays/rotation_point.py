@@ -21,7 +21,7 @@ def search(arr):
     return left
 
 if __name__ == '__main__':
-    from lib import sorted_randints
+    from lib import unique_randints
     from random import randint, sample
     for k, v in {(3, 1, 2): 1,
                 (2, 4, 0, 1): 2,
@@ -30,7 +30,7 @@ if __name__ == '__main__':
                 (4, 6, -9, -7): 2}.items():
         assert search(k) == v
     for size in range(1, 1000):
-        a = sorted_randints(-size, size, size)
+        a = unique_randints(-size, size, size)
         n = len(a)
         i = randint(0, size-1)
         a = a[i:] + a[:i]
