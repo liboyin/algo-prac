@@ -36,7 +36,7 @@ if __name__ == '__main__':
     from copy import deepcopy
     from lib import yield_while
     from trees.construction import random_bst
-    for size in range(1, 100):
+    for size in [x for x in range(1, 50) for _ in range(x)]:
         rnd_test = random_bst(size)
         test_copy = deepcopy(rnd_test)
         rec_head, rec_tail, rec_size = convert(rnd_test)

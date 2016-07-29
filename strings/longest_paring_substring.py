@@ -6,19 +6,20 @@ def search(seq):
     :return: int
     """
     d = c = m = 0  # d: seq[:i+1].count('(') - seq[:i+1].count(')'); c: length of the longest valid parenthesis
-    # substring from the last point of reset to seq[i]. m: global maximum of c
+        # substring from the last point of reset to seq[i]. m: global maximum of c
     for x in seq:
         if x == '(':  # if there are more opening parenthesis than closing
             d += 1
-        elif d == 0:  # if the number of opening and closing parenthesis are equal, and x is a closing parenthesis
-            c = 0  # reset d and c
         else:
-            d -= 1
-            c += 2
-            m = max(m, c)
+            assert x == ')'
+            if d == 0:  # if the number of opening and closing parenthesis are equal
+                c = 0
+            else:
+                d -= 1
+                c += 2
+                m = max(m, c)
     return m
 
-if __name__ == '__main__':
-    std_test = {'((()': 2, ')()())': 4, '()(()))))': 6}
-    for k, v in std_test.items():
+if __name__ == '__main__':  # TODO: random test?
+    for k, v in {'((()': 2, ')()())': 4, '()(()))))': 6}.items():
         assert search(k) == v

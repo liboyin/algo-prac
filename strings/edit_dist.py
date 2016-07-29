@@ -46,7 +46,7 @@ def is_k_palindrome(t, k):
         complexity is O(mn) in this implementation, but can be optimised to O(min(m, n)).
     :param t: str
     :param k: str
-    :return: int
+    :return: bool
     """
     n = len(t)
     dp = [[inf] * (n+1) for _ in range(n+1)]
@@ -64,6 +64,6 @@ def is_k_palindrome(t, k):
 if __name__ == '__main__':
     print(search('sitting', 'kitten'))
     print(search2('sitting', 'kitten'))
-    assert is_k_palindrome('acdcb', 2) == True
-    assert is_k_palindrome('matdam', 1) == True
-    assert is_k_palindrome('abdxa', 1) == False
+    assert is_k_palindrome('acdcb', 2)
+    assert is_k_palindrome('matdam', 1)
+    assert not is_k_palindrome('abdxa', 1)

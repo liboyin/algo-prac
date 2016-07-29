@@ -1,6 +1,6 @@
 import random
 import re
-from itertools import product, tee
+from itertools import product, tee, zip_longest
 from math import floor, log2
 
 def identity(x):
@@ -17,7 +17,7 @@ def argmin(iterable, key=identity, val=False):
 def argmax_2d(mat, val=False):
     m, n = len(mat), len(mat[0])
     i, j = max(product(range(m), range(n)), key=lambda x: mat[x[0]][x[1]])  # lambda cannot unpack tuple in Python 3
-    return i, j, mat[i][j] if val else i, j
+    return (i, j, mat[i][j]) if val else (i, j)
 
 def batch_replace(text, rep):  # rep: dict[str, str]. from_test -> to_text
     rx = re.compile('|'.join(map(re.escape, rep.keys())))
@@ -122,7 +122,8 @@ def is_sorted(arr, key=identity):
     return all(key(x) <= key(y) for x, y in sliding_window(arr, 2))
 
 def iter_equals(xs, ys):
-    return all(x == y for x, y in zip(xs, ys))
+    sentinel = object()
+    return all((x is not sentinel and y is not sentinel and x == y) for x, y in zip_longest(xs, ys, fillvalue=sentinel))
 
 def kth_of_iter(iterable, k=0, default=None):
     """

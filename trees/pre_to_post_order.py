@@ -6,6 +6,7 @@ def convert(seq):
     """
     Converts a pre-order traversal sequence of a valid binary search tree to a post-order traversal sequence. Assumes
         unique elements. An invalid pre-order traversal sequence triggers an AssertionError.
+    Refer to valid_pre_order.py for the details on pre-order traversal sequence verification.
     Solution is a combination of pre-order verification, pre-order to BST, and recursion-free post-order traversal.
     Time complexity is O(n). Space complexity is O(n).
     :param seq: seq[num]
@@ -56,17 +57,17 @@ def convert2(seq):  # O(n^2) time solution
         yield path.pop().val
 
 if __name__ == '__main__':
-    from lib import fails_as
+    from lib import fails_as, iter_equals
     from trees.construction import random_bst
     from trees.traversal import pre_order, post_order
     std_test = {(40, 30, 35, 80, 100): (35, 30, 100, 80, 40),
                 (40, 30, 32, 35, 80, 90, 100, 120): (35, 32, 30, 120, 100, 90, 80, 40),
                 (40, 30, 10, 35, 37, 80, 70, 60, 75, 100, 90): (10, 37, 35, 30, 60, 75, 70, 90, 100, 80, 40)}
     for k, v in std_test.items():
-        assert tuple(convert(k)) == v
+        assert iter_equals(convert(k), v)
     fail_test = {(7, 9, 6, 1, 4, 2, 3, 40), (40, 30, 35, 20, 80, 100)}
     for x in fail_test:
         assert fails_as(AssertionError, lambda y: tuple(convert(y)), x)
-    for size in range(1, 100):
+    for size in [x for x in range(1, 100) for _ in range(x)]:
         t = random_bst(size)
-        assert list(convert(pre_order(t))) == list(post_order(t))
+        assert iter_equals(convert(pre_order(t)), post_order(t))

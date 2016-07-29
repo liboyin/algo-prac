@@ -30,7 +30,7 @@ if __name__ == '__main__':
     from lib import iter_equals
     from trees.construction import random_bst
     from trees.traversal import fast_pre_order, in_order, fast_post_order
-    for size in range(1, 100):
+    for size in [x for x in range(1, 100) for _ in range(x)]:
         t = random_bst(size)
         r = rebuild(fast_pre_order(t))
         assert iter_equals(in_order(r), in_order(t))

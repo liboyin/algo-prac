@@ -8,13 +8,14 @@ def search(t):  # DP, O(n^2) time & space
         dp[i][i] = 1  # odd length palindromes
     for i in range(1, n):
         dp[i][i-1] = 0  # even length palindromes
-    for i in range(1, n-1):
-        j = 0
-        while j+i < n:
-            if t[j] == t[j+i] and dp[j+1][j+i-1] >= 0:
-                dp[j][j+i] = dp[j+1][j+i-1] + 2
-            j += 1
-    i, j = argmax_2d(dp)
+    for inc in range(1, n-1):
+        i = 0
+        while i + inc < n:
+            j = i + inc
+            if t[i] == t[j] and dp[i+1][j-1] >= 0:
+                dp[i][j] = dp[i+1][j-1] + 2
+            i += 1
+    i, j = argmax_2d(dp)  # hence the default value in dp has to be numerical, not None
     r = []
     while dp[i][j] > 1:  # add mirrored part
         r.append(t[i])
@@ -47,7 +48,5 @@ if __name__ == '__main__':
     from string import ascii_lowercase as alphabet
     from random import choice
     for size in range(1, 100):
-        rnd_test = ''.join(choice(alphabet) for _ in range(size))
-        dp = search(rnd_test)
-        manacher = search2(rnd_test)
-        assert len(dp) == len(manacher)
+        a = ''.join(choice(alphabet) for _ in range(size))
+        assert len(search(a)) == len(search2(a))

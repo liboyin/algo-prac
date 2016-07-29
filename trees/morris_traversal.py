@@ -54,7 +54,7 @@ def post_order(root):
                 x = x.left
             else:  # second visit to x
                 assert p.right is x
-                # reverse right pointers of all nodes on the path from x to p. note how x.right is intact
+                # reverse right pointers of all nodes on the path from x to p. note that x.right is intact
                 head = x
                 mid = x.left
                 while mid is not x:
@@ -77,8 +77,7 @@ def post_order(root):
 if __name__ == '__main__':
     from trees.construction import random_bst
     from trees.traversal import fast_in_order, fast_post_order
-    for size in range(1, 100):
-        for _ in range(size):
-            t = random_bst(size)
-            assert list(in_order(t)) == list(fast_in_order(t))
-            assert list(post_order(t)) == list(fast_post_order(t))
+    for size in [x for x in range(1, 100) for _ in range(x)]:
+        t = random_bst(size)
+        assert list(in_order(t)) == list(fast_in_order(t))
+        assert list(post_order(t)) == list(fast_post_order(t))
