@@ -12,7 +12,16 @@ def ext_euclid(a, b):
     x, y = y, (x - div * y)
     return x, y, q
 
-def linear_diophantine_equation(a, b, c):
+def ext_euclid2(a, b):
+    print('a={}, b={}'.format(a, b))
+    x0, x1, y0, y1 = 1, 0, 0, 1
+    while b != 0:
+        div, a, b = a // b, b, a % b
+        x0, x1 = x1, x0 - div * x1
+        y0, y1 = y1, y0 - div * y1
+    return x0, y0, a
+
+def linear_diophantine_equation(a, b, c):  # TODO: not tested
     """
     Finds integer x & y, s.t. a * x + b * y == c. Returns (None, None) if solution does not exist.
     Observation: Solution to a linear diophantine equation exists iff gcd(a, b) divides c.
@@ -34,8 +43,8 @@ if __name__ == '__main__':
                 (240, 46): (-9, 47, 2),
                 (30, 47): (11, -7, 1)}  # this is a good example to try the algorithm by hand
     for k, v in std_test.items():
-        assert ext_euclid(*k) == v
+        assert ext_euclid2(*k) == v
     for _ in range(1000):
         a, b = randint(1, 1 << 31), randint(1, 1 << 31)
-        x, y, q = ext_euclid(a, b)
+        x, y, q = ext_euclid2(a, b)
         assert x * a + y * b == q == gcd(a, b)

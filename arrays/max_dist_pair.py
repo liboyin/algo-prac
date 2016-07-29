@@ -9,11 +9,13 @@ def search(arr):
     """
     assert len(arr) > 0
     left_min = list(stated_map(min, arr, arr[0]))
-    right_max = list(stated_map(max, reversed(arr), arr[-1]))[::-1]
+    right_max = list(stated_map(max, reversed(arr), arr[-1]))
+    right_max.reverse()
     # since left_min[i] and right_max[i] are both inclusive for i, left_min[i] <= right_max[i]
     i, j = 0, 0  # two moving boundaries, where i <= j
     max_dist = 0
     while j < len(arr):
+        assert i <= j
         if left_min[i] <= right_max[j]:
             max_dist = max(max_dist, j - i)
             j += 1

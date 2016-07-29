@@ -5,15 +5,14 @@ from operator import xor
 def repeat_two(iterable):
     """
     Given an iterable, in which all elements but one appear twice. Returns the unique element.
-    Observation: x XOR x == 0. also, since XOR is associative & commutative, order is not important
+    Observation: x XOR x == 0. Also, since XOR is associative & commutative, order is not important.
     :param iterable: iter[int]
     :return: num
     """
     return reduce(xor, iterable, 0)
 
 def repeat_three(iterable):  # all elements but one appear 3 times
-    ones = 0
-    twos = 0
+    ones, twos = 0, 0
     for x in iterable:
         twos |= ones & x  # when x appears the first time, x is not recorded; second time, x is recorded; third time, x is recorded
         ones ^= x  # when x appears the first time, x is recorded; second time, x is cleared; third time, x is recorded

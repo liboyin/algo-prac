@@ -1,5 +1,4 @@
-from lib import bin_search_right
-from operator import itemgetter as get_item
+from lib import bin_search_right, snd
 
 def search(arr):
     """
@@ -13,11 +12,11 @@ def search(arr):
     n = len(arr)
     if n == 0:
         return 0
-    a = sorted(arr, key=get_item(1))  # sort on finishing time
+    a = sorted(arr, key=snd)  # sort on finishing time
     dp = [0]  # dp[i]: max profit considering a[:i]. when finished, len(dp) == n + 1
     for i, x in enumerate(a):
         start, _, val = x
-        j = bin_search_right(a, start, right=i, key=get_item(1)) - 1
+        j = bin_search_right(a, start, right=i, key=snd) - 1
         # j: index (in arr) of the last task that has finished before the starting time of this one
         if j == -1:  # no task finishes before the starting time of this one
             dp.append(max(dp[-1], val))  # carry over from the previous, or create new sequence of tasks
@@ -27,16 +26,17 @@ def search(arr):
 
 if __name__ == '__main__':
     from itertools import product
-    from lib import sliding_window
+    from lib import fst, sliding_window
     from math import inf
     from random import randint
+    from operator import itemgetter
     def control(arr):  # O(n 2^n)
-        n, val_max = len(arr), -inf
+        n, max_sum = len(arr), -inf
         for mask in product(*([(0, 1)] * n)):
-            a = sorted([x for x, y in zip(arr, mask) if y], key=get_item(0))  # selected tasks, sorted by starting time
+            a = sorted([x for x, y in zip(arr, mask) if y], key=fst)  # selected tasks, sorted by starting time
             if all(x[1] <= y[0] for x, y in sliding_window(a, 2)):
-                val_max = max(val_max, sum(map(get_item(2), a)))
-        return val_max
+                max_sum = max(max_sum, sum(map(itemgetter(2), a)))
+        return max_sum
     for k, v in {((3, 10, 20), (1, 2, 50), (6, 19, 100), (10, 100, 200)): 270,
                  ((3, 10, 20), (1, 2, 50), (6, 19, 100), (2, 100, 200)): 250}.items():
         assert search(k) == v

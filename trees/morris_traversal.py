@@ -22,7 +22,8 @@ def in_order(root):
             yield x.val
             x = x.right  # may follow a back pointer
         else:
-            p = predecessor(x)
+            p = predecessor(x)  # since the predecessor of each node is unique, calculating the predecessor for all
+                # nodes takes only linear time. the overall time complexity hence remains O(n) with a larger constant
             if p.right is None:  # first visit to x
                 # for pre-order traversal, yield x.val here
                 p.right = x  # set back pointer

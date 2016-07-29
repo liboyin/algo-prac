@@ -5,8 +5,8 @@ def merge(*iterables):  # len() is not supported on iterators
     for i, xs in enumerate(iterables):
         ite = iter(xs)
         for x in ite:
-            h.append((x, i, ite))  # heapq resolves ties by looking at the next element of tuple
-            # here, index is added as a tie breaker. as a result, the output sequence is stable
+            h.append((x, i, ite))  # heapq resolves ties by looking at the next element of tuple. here, index is added
+                # as a tie breaker. as a result, the output sequence is stable
             break
     heapq.heapify(h)
     while len(h) > 0:
