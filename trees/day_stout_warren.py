@@ -27,23 +27,23 @@ def tree_to_vine(root):
 
 def vine_to_tree(root, size):
     """
-    Produces a balanced and complete tree by repeatedly left rotating every second node on the vine.
+    Produces a balanced and complete (heap-like) tree by repeatedly left rotating every second node on the vine.
     Time complexity is O(n). Space complexity is O(1).
     :param root: Node, pseudo-root of a vine
     :param size: int, positive
     """
     def compress(n):
-        x = root
+        x = root  # every time compress() is called, x is reset to root
         for _ in range(n):
-            # left rotation on right: (left, x, (rl, right, (rrl, rr, rrr))) -> (left, x, ((rl, right, rrl), rr, rrr))
+            # left rotation on right
             temp = x.right
             x.right = temp.right
-            x = x.right  # x ends up on rr, i.e. right child of original position
+            x = x.right  # x ends up on rr
             temp.right = x.left
             x.left = temp
     assert root.left is None
     assert size > 0
-    m = 2 ** floor(log2(size + 1)) - 1  # TODO: ???
+    m = 2 ** floor(log2(size + 1)) - 1  # 1-2 -> 1, 3-6 -> 3, 7-14 -> 7, 15-30 -> 15
     compress(size - m)
     while m > 1:
         m //= 2
