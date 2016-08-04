@@ -7,7 +7,7 @@ def search(arr):
     :param arr: list[int]
     :return: int
     """
-    sum_up_to = odd_sum = count = 0  # sum_up_to: sum(arr[:i]). odd_sum: # of j < i where sum(arr[:j]) is odd
+    sum_up_to = odd_sum = count = 0  # sum_up_to: sum(arr[:i+1]). odd_sum: # of j < i where sum(arr[:j]) is odd
     even_sum = 1  # even_sum: # of j < i where sum(arr[:j]) is even. sum([]) == 0, but is not counted
     for x in arr:
         sum_up_to += x
@@ -27,8 +27,7 @@ if __name__ == '__main__':
                 if sum(arr[i: j+1]) % 2 == 0:
                     c += 1
         return c
-    std_test = {(1, 2, 2, 3, 4, 1): 9}
-    for k, v in std_test.items():
+    for k, v in {(1, 2, 2, 3, 4, 1): 9}.items():
         assert search(k) == v
     for size in range(100):
         a = [randint(0, 100) for _ in range(size)]

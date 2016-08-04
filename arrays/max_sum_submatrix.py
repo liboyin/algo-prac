@@ -4,7 +4,9 @@ from math import inf
 
 def search(mat):
     """
-    Finds the submatrix with the max sum.
+    2D Kadane algorithm: finds the submatrix with the max sum.
+    Observation: Consider a max-sum submatrix. Compress it on x-axis, then its starting & ending y-indices are the same
+        as in 2D. Likewise, compressing on y-axis, then its starting & ending x-indices are the same as in 2D.
     Time complexity is O(n^3). Space complexity is O(n).
     :param mat: list[list[num]]
     :return:  tuple[int,int,int,int,num]. up, down, left, right coordinate of the submatrix and its sum

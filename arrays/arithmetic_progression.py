@@ -10,12 +10,12 @@ def search(arr):
         return None
     assert arr[1] - arr[0] > 0
     left, right = 0, n - 1
-    gap = (arr[right] - arr[left]) / (right - left + 1)  # this line does not allow the no gap case
+    gap = (arr[right] - arr[left]) / (right - left + 1)  # this line assumes exactly one gap
     while left <= right:
         mid = (left + right) // 2
         if arr[mid] == arr[0] + gap * mid:
             left = mid + 1
-        elif arr[mid-1] == arr[0] + gap * (mid-1) and arr[mid] > arr[0] + gap * mid:
+        elif arr[mid-1] == arr[0] + gap * (mid-1) and arr[mid] > arr[0] + gap * mid:  # mid-1 passed, mid failed
             return mid
         else:
             right = mid - 1

@@ -27,8 +27,7 @@ def search(arr):
             yield y, n
 
 def search2(arr):  # finds the subarray whose sum is closest to 0
-    n = len(arr)
-    assert n > 0
+    assert len(arr) > 0
     a = list(enumerate(stated_map(add, chain([0], arr), 0)))  # (i, sum(arr[:i]))
     a.sort(key=snd)
     x, y = min(sliding_window(a, 2), key=lambda z: abs(z[0][1] - z[1][1]))
@@ -36,6 +35,7 @@ def search2(arr):  # finds the subarray whose sum is closest to 0
     return left, right, sum(arr[left:right])
 
 def search_k(arr, k):  # finds the subarray whose sum is closest to k
+    # TODO: write an interval tree version
     n = len(arr)
     assert n > 0
     a = list(enumerate(stated_map(add, chain((0,), arr), 0)))  # (i, sum(arr[:i]))

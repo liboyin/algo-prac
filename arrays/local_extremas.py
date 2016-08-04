@@ -22,11 +22,11 @@ def any_local_max(arr):
     :param arr: list[num]. must be locally distinct, unless len(arr) == 1
     :return: int
     """
-    assert len(arr) > 0
     def q(i):
         if 0 <= i < len(arr):
             return arr[i]
         return -inf
+    assert len(arr) > 0
     left, right = 0, len(arr) - 1
     while left <= right:
         mid = (left + right) // 2

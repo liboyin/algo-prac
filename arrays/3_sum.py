@@ -1,4 +1,4 @@
-from operator import itemgetter as get_item
+from lib import snd
 
 def search(arr, target):
     """
@@ -38,7 +38,7 @@ def search2(arr, target):
     n = len(arr)
     if n < 3:
         return
-    a = sorted(enumerate(arr), key=get_item(1))  # sequence generation is hence out-of-order
+    a = sorted(enumerate(arr), key=snd)  # sequence generation is hence out-of-order
     for left in range(n - 1):
         mid = left + 1
         right = n - 1

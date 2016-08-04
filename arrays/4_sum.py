@@ -1,4 +1,4 @@
-from operator import itemgetter as get_item
+from operator import itemgetter
 
 def search(arr, target):
     """
@@ -40,7 +40,7 @@ def search2(arr, target):
     for i in range(n):
         for j in range(i+1, n):
             a.append((i, j, arr[i] + arr[j]))
-    a.sort(key=get_item(2))  # sort on the sum of pairs. this makes the algorithm highly incompatible to repetitions
+    a.sort(key=itemgetter(2))  # sort on the sum of pairs. this makes the algorithm highly incompatible to repetitions
     left, right = 0, len(a) - 1
     while left < right:
         il, jl, xl = a[left]

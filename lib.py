@@ -57,7 +57,7 @@ def bin_search_right(arr, x, left=0, right=None, key=identity):  # identical to 
 
 def fails_as(exception, func, *args, **kwargs):  # returns whether a function throws a specified exception
     try:
-        _ = func(*args, **kwargs)
+        func(*args, **kwargs)
     except Exception as ex:
         return isinstance(ex, exception)
     else:  # if no exception is thrown
@@ -96,7 +96,7 @@ def filter3_inplace(arr, pivot, key=identity):
     while j < k:
         x = key(arr[j])
         if x < pivot:
-            arr[i], arr[j] = arr[j], arr[i]  # swap x with the leftmost 1
+            arr[i], arr[j] = arr[j], arr[i]  # swap x with the leftmost y == pivot
             i += 1
             j += 1
         elif x == pivot:
@@ -216,7 +216,7 @@ def unique_randints(lower, upper, n):
         m -= 1
     return r
 
-def yield_while(state, term, next):
+def yield_while(state, term, trans):
     while term(state):
         yield state
-        state = next(state)
+        state = trans(state)

@@ -1,7 +1,7 @@
 def search(arr, n):
     """
     Given a list of distinct coin values and a total amount. The supply of each kind of coin is sufficient. Returns the
-    number of ways the given total amount can be achieved.
+        number of ways the given total amount can be achieved.
     Solution is a variation of 0-1 Knapsack, although the problem looks more like a multi-select Knapsack problem.
     Time complexity is O(mn). Space complexity is O(n).
     :param arr: list[int], positive
@@ -32,12 +32,11 @@ if __name__ == '__main__':
         for xs in product(*[range(n//x+1) for x in arr]):
             c += (sum(arr[i] * xs[i] for i in range(m)) == n)
         return c
-    std_test = {((1, 2, 3, 4), 4): 5,  # {1,1,1,1}, {1,1,2}, {1,3}, {2,2}, {4}
-                ((2, 1, 3), 5): 5}  # {1,1,1,1}, {1,1,1,2}, {1,2,2}, {1,1,3}, {2,3}
-    for k, v in std_test.items():
+    for k, v in {((1, 2, 3, 4), 4): 5,  # {1,1,1,1}, {1,1,2}, {1,3}, {2,2}, {4}
+                ((2, 1, 3), 5): 5}.items():  # {1,1,1,1}, {1,1,1,2}, {1,2,2}, {1,1,3}, {2,3}
         if control(*k) != v:
             print(control(*k))
     for _ in range(100):
-        rnd_test = list({randint(1, 10) for _ in range(5)})
+        a = list({randint(1, 10) for _ in range(5)})
         n = randint(10, 20)
-        assert search(rnd_test, n) == control(rnd_test, n)
+        assert search(a, n) == control(a, n)

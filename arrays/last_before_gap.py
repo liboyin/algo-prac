@@ -22,7 +22,6 @@ def search(arr, gap):
         while i <= j and arr[i] + gap < arr[j]:  # slide j leftwards
             lbg[j] = i
             j -= 1
-    # assert lbg[0] is None
     return lbg
 
 if __name__ == '__main__':
