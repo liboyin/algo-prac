@@ -1,4 +1,4 @@
-from math import ceil, inf, log2
+from math import ceil, log2
 
 class SumTree:  # ref: max_rectangle_under_hist.MinIndexRangeTree
     def __init__(self, arr):  # O(n) time & space
@@ -50,35 +50,34 @@ def search(hist):
         return 0
     def volume(i):
         j_left = left_geq[i]  # j_left: index of the first geq on the left
-        v_left = (i - j_left - 1) * min(hist[j_left], hist[i]) - qrs(j_left + 1, i - 1)
+        v_left = 0 if j_left is None else (i - j_left - 1) * min(hist[j_left], hist[i]) - qrs(j_left + 1, i - 1)
         # i - j_left - 1: number of gaps between j_left and i (exclusive); qrs(j_left + 1, i - 1): sum(hist[j_left+1:i])
         j_right = right_geq[i]  # j_right: index of the first geq on the right
-        v_right = (j_right - i - 1) * min(hist[j_right], hist[i]) - qrs(i + 1, j_right - 1)
+        v_right = 0 if j_right is None else (j_right - i - 1) * min(hist[j_right], hist[i]) - qrs(i + 1, j_right - 1)
         # j_right - i - 1: number of gaps between i and j_right (exclusive); qrs(i + 1, j_right - 1): sum(hist[i+1:j_right])
         return max(v_left, v_right)
-    hist = [inf] + hist + [inf]  # bound left & right
     n = len(hist)
-    if n <= 3:
+    if n <= 1:
         return 0
     left_geq = next_geq(hist[::-1])
     left_geq.reverse()
-    for i, x in enumerate(left_geq[1:], start=1):  # for all i except i == 0, left_geq[i] is not None
-        left_geq[i] = n - 1 - x  # undo reverse for each element
+    for i, x in enumerate(left_geq):
+        if x is not None:
+            left_geq[i] = n - 1 - x  # undo reverse for each element
     right_geq = next_geq(hist)  # for all i except i == n - 1, right_geq[i] is not None
     st = SumTree(hist)
-    return max(volume(i) for i in range(1, n-1))
+    return max(volume(i) for i in range(n))
 
 if __name__ == '__main__':
     from lib import rev_range
     from random import randint
     def control(hist):  # O(n^2)
-        hist = [inf] + hist + [inf]
         max_vol, n = 0, len(hist)
-        for i, x in enumerate(hist[1:-1], start=1):
-            i_left = next((j for j in rev_range(i) if hist[j] >= x), 0)  # index of the first geq on the left
-            v_left = min(x, hist[i_left]) * (i-i_left-1) - sum(hist[i_left+1:i])
-            i_right = next((j for j in range(i+1, n) if hist[j] >= x), n - 1)  # index of the first geq on the right
-            v_right = min(x, hist[i_right]) * (i_right-i-1) - sum(hist[i+1:i_right])
+        for i, x in enumerate(hist):
+            i_left = next((j for j in rev_range(i) if hist[j] >= x), None)  # index of the first geq on the left
+            v_left = 0 if i_left is None else min(x, hist[i_left]) * (i-i_left-1) - sum(hist[i_left+1:i])
+            i_right = next((j for j in range(i+1, n) if hist[j] >= x), None)  # index of the first geq on the right
+            v_right = 0 if i_right is None else min(x, hist[i_right]) * (i_right-i-1) - sum(hist[i+1:i_right])
             max_vol = max(max_vol, v_left, v_right)
         return max_vol
     for size in range(50):

@@ -40,7 +40,7 @@ def search2(xs, ys):  # O(min(m, n)) space by iterating through rows of DP table
 def is_k_palindrome(t, k):
     """
     Finds whether t is palindromic after removing at most k chars.
-    Observation: Equivalent to finding whether the edit distance between t and t.reverse() is smaller than or equal to
+    Observation: Equivalent to finding whether the edit distance between t and reversed(t) is smaller than or equal to
         2 * k. Note that this is not Levenshtein distance, in that only insertion and deletion are allowed.
     It is only necessary to explore within radius k around the diagonal. Hence, time complexity is O(nk). Space
         complexity is O(mn) in this implementation, but can be optimised to O(min(m, n)).

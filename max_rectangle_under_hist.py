@@ -1,5 +1,5 @@
+from lib import snd
 from math import ceil, inf, log2
-from operator import itemgetter as get_item
 
 class MinIndexRangeTree:
     def __init__(self, arr):  # O(n) time & space
@@ -7,15 +7,15 @@ class MinIndexRangeTree:
             if left == right:
                 a[i] = left, arr[left]  # (min_idx, min_val) pairs
                 return a[i]
-            mid = (left + right) // 2
+            mid = (left + right) // 2  # left: arr[left:mid+1]; right: arr[mid:right+1]
             left = build(left, mid, i * 2 + 1)  # recursive call
             right = build(mid + 1, right, i * 2 + 2)  # recursive call
-            a[i] = min((left, right), key=get_item(1))
+            a[i] = min((left, right), key=snd)
             return a[i]
         self.n = len(arr)
         h = ceil(log2(self.n))  # h: height of full tree with n nodes. in most cases, not all cells are used
         a = [None] * (2 * 2 ** h - 1)  # 2 * 2 ** h - 1: size of full tree with n leaf nodes and n - 1 internal nodes
-        build(0, self.n - 1, 0)
+        build(0, self.n - 1, 0)  # root corresponds to arr
         self.a = a
         self.cache = dict()  # dict[tuple[int,int], tuple[int, T]]: query cache
 
@@ -24,11 +24,11 @@ class MinIndexRangeTree:
             if sr < sl or right < sl or sr < left:
                 return None, inf
             if left <= sl and sr <= right:  # queried range covers the current slice
-                return self.a[i]  # returns a partial result except for the last return / first function call
+                return self.a[i]  # returns a partial result except for the first function call
             mid = (sl + sr) // 2
             q_left = query(sl, mid, i * 2 + 1)  # recursive call
             q_right = query(mid + 1, sr, i * 2 + 2)  # recursive call
-            return min((q_left, q_right), key=get_item(1))
+            return min((q_left, q_right), key=snd)
         if (left, right) in self.cache:
             return self.cache[(left, right)]
         r = query(0, self.n - 1, 0)[0]  # self.a[0] represents range arr[0:self.n]

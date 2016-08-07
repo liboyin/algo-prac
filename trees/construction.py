@@ -15,8 +15,7 @@ class Node:
 def tuple_to_tree(x):
     if x is None:
         return None
-    left, val, right = x
-    return Node(tuple_to_tree(left), val, tuple_to_tree(right))  # recursive call
+    return Node(tuple_to_tree(x.left), x.val, tuple_to_tree(x.right))  # recursive call
 
 def tree_to_tuple(x):
     if x is None:

@@ -46,7 +46,7 @@ def search2(xs, ys):
             d[x].append(i)
         else:
             d[x] = [i]
-    ys1, idx = zip(*[(y, i) for y in ys if y in d for i in d[y]])
+    ys1, idx = zip(*[(y, i) for y in ys for i in d.get(y, ())])
     return [ys1[i] for i in longest_increasing_subsequence(idx)]
 
 def is_subsequence_of(sub, arr):
