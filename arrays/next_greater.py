@@ -1,15 +1,44 @@
 def next_greater(arr):
-    s = [0]  # list[int]. maintains as a stack the indices of a non-increasing subsequence of a
-    ng = [None] * len(arr)  # list[T]. ng[i]: first j in a[i:] s.t. j > a[i], or None if such j does not exist
+    s = [0]  # list[int]. maintains as a stack the indices of a non-increasing subsequence of arr
+    r = [None] * len(arr)  # list[int]. r[i]: smallest j s.t. a[j] > a[i], or None if such j does not exist
     for i, x in enumerate(arr[1:], start=1):
-        while len(s) > 0 and arr[s[-1]] < x:  # for all elements y in stack s.t. y < x
-            ng[s.pop()] = x
+        while len(s) > 0 and x > arr[s[-1]]:  # for all indices y in stack s.t. arr[y] < x
+            r[s.pop()] = i
         s.append(i)
-    return ng
+    return r  # returns indices
+
+def prev_greater(arr):
+    n = len(arr)
+    r = next_greater(arr[::-1])
+    r.reverse()
+    for i, x in enumerate(r):
+        if x is not None:
+            r[i] = n - 1 - x
+    return r
 
 if __name__ == '__main__':
+    def control_next(arr):
+        n = len(arr)
+        r = [None] * n
+        for i in range(n):
+            for j in range(i+1, n):
+                if arr[j] > arr[i]:
+                    r[i] = j
+                    break
+        return r
+    def control_prev(arr):
+        n = len(arr)
+        r = [None] * n
+        for i in range(n):
+            for j in rev_range(i):
+                if arr[j] > arr[i]:
+                    r[i] = j
+                    break
+        return r
+    from lib import rev_range
     from random import shuffle
-    for _ in range(100):
-        a = list(range(10)) * 5
+    for size in [x for x in range(100) for _ in range(x)]:
+        a = list(range(size)) * 2
         shuffle(a)
-        assert next_greater(a) == [next((x for x in a[i+1:] if x > a[i]), None) for i in range(len(a))]
+        assert next_greater(a) == control_next(a)
+        assert prev_greater(a) == control_prev(a)

@@ -5,17 +5,13 @@ def with_repeat(arr):  # output is sorted lexicographically
     n = len(arr)
     yield arr
     while True:
-        k = next((i for i in rev_range(n-1) if arr[i] < arr[i+1]), None)  # k: largest index s.t. a[k] < a[k+1]
-        if k is None:  # arr is reversely sorted
+        left = next((i for i in rev_range(n-1) if arr[i] < arr[i+1]), None)  # left: largest index s.t. a[left] < a[left+1]
+        if left is None:  # arr is reversely sorted
             return
-        l = next(i for i in rev_range(k+1, n) if arr[k] < arr[i])
-        # largest index l > k, s.t. a[k] < a[l]. guaranteed to exist as a[k] < a[k+1]
-        arr[k], arr[l] = arr[l], arr[k]  # swap arr[k] and arr[l]
-        i, j = k + 1, n - 1  # reverse arr[k+1:]
-        while i < j:
-            arr[i], arr[j] = arr[j], arr[i]
-            i += 1
-            j -= 1
+        right = next(i for i in rev_range(left+1, n) if arr[left] < arr[i])
+        # largest index right > left, s.t. a[left] < a[right]. guaranteed to exist as a[left] < a[left+1]
+        arr[left], arr[right] = arr[right], arr[left]  # swap arr[left] and arr[right]
+        arr[left+1:] = reversed(arr[left+1:])  # arr[left+1:].reverse() reverses on a copy
         yield arr
 
 def without_repeat(arr):  # output is not sorted

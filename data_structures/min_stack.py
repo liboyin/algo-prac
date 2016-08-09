@@ -52,7 +52,7 @@ class MinStack2:  # constant extra space solution. requires numerical elements
         if self.e is None:  # empty stack
             self.s.append(item)
             self.e = item
-        elif item >= self.e:
+        elif item >= self.e:  # including when item is the second instance of the min element
             self.s.append(item)
         else:  # when finished, s[-1] < self.e
             self.s.append(item * 2 - self.e)
@@ -67,7 +67,7 @@ class MinStack2:  # constant extra space solution. requires numerical elements
     def pop(self):
         if len(self.s) == 0:
             raise IndexError
-        if self.s[-1] >= self.e:
+        if self.s[-1] >= self.e:  # handles multiple instances of the min element
             return self.s.pop()
         temp = self.e
         self.e = self.e * 2 - self.s[-1]

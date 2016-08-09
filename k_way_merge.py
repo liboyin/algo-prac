@@ -1,8 +1,8 @@
 import heapq
 
-def merge(*iterables):  # len() is not supported on iterators
+def merge(*iters):  # len() is not supported on iterators
     h = []
-    for i, xs in enumerate(iterables):
+    for i, xs in enumerate(iters):
         ite = iter(xs)
         for x in ite:
             h.append((x, i, ite))  # heapq resolves ties by looking at the next element of tuple. here, index is added
