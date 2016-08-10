@@ -21,10 +21,10 @@ def search(arr):
 
 def search2(arr):
     """
-    Observation: Imagine each x in arr is a pointer to arr[x-1], then the pointers form a \rho structure and possibly
-        many loops. Also since elements are dense in range [1, n], arr[0] is guaranteed to be the head of the \rho
-        structure. Hence, this problem is equivalent to finding the start of the loop in a linked list, and can be
-        solved with Robert Floyd's tortoise and hare algorithm.
+    Observation: Imagine each x in arr is a pointer to arr[x], then the pointers form a \rho structure and possibly
+        many loops. And since elements are dense in range [1, n], arr[0] is guaranteed to be the head of the \rho.
+        Hence, this problem is equivalent to finding the start of the loop in a linked list, and can be solved with
+        Robert Floyd's tortoise and hare algorithm.
     Time complexity is O(n). Space complexity is O(1).
     :param arr: list[int], positive
     :return: int, positive
