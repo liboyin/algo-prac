@@ -1,3 +1,6 @@
+from functools import reduce
+from operator import xor
+
 def search(arr):
     """
     Given an array containing n+1 integers in range [1, n], finds the duplicated one.
@@ -40,6 +43,11 @@ def search2(arr):
         fast = arr[fast]
     return slow
 
+def search3(arr):  # only allows even duplications
+    n = len(arr)
+    acc = reduce(xor, range(n), 0)
+    return reduce(xor, arr, acc)
+
 if __name__ == '__main__':
     from random import choice, shuffle
     for size in [x for x in range(1, 100) for _ in range(x)]:
@@ -47,4 +55,4 @@ if __name__ == '__main__':
         k = choice(a)
         a.append(k)
         shuffle(a)
-        assert search(a) == search2(a) == k
+        assert search(a) == search2(a) == search3(a) == k

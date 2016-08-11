@@ -11,7 +11,7 @@ class MinMaxHeap:
     """
     @staticmethod
     def min_layer(i):
-        return int(log2(i+1)) % 2 == 0
+        return not int(log2(i+1)) & 1
 
     def __init__(self, iterable, key=identity):  # key: T -> comparable
         self.a = list(iterable)

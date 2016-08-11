@@ -13,10 +13,10 @@ def fibonacci(n):
     a = [(1, np.asarray([[1, 1], [1, 0]], dtype=int))]  # f = [[1, 1], [1, 0]]
     i = 1
     while i < n:
-        i <<= 1  # 2, 4, ..., 2^floor(log2(n))
-        x = a[-1][1] @ a[-1][1]  # f^2, f^4, ...
+        i <<= 1  # 2, 4, ..., 2 ^ floor(log2(n))
+        x = a[-1][1] @ a[-1][1]  # f ^ 2, f ^ 4, ...
         a.append((i, x))
-    m = np.asarray([[1, 0], [0, 1]], dtype=int)  # m = identity(2)
+    m = np.asarray([[1, 0], [0, 1]], dtype=int)
     for i, x in reversed(a):
         if i < n:
             m = m @ x
@@ -29,9 +29,9 @@ def fibonacci2(n):  # tested speed same as non-recursive fibonacci()
             return np.asarray([[1, 1], [1, 0]], dtype=int)
         m = step(i // 2)  # recursive call
         m2 = m @ m
-        if i % 2 == 0:
-            return m2
-        return m2 @ np.asarray([[1, 1], [1, 0]], dtype=int)
+        if i & 1:
+            return m2 @ np.asarray([[1, 1], [1, 0]], dtype=int)
+        return m2
     assert n >= 0
     return (step(n) @ np.asarray([1, 1], dtype=int))[1]
 

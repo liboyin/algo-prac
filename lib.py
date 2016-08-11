@@ -34,8 +34,9 @@ def bin_search_left(arr, x, left=0, right=None, key=identity):  # identical to b
             left = mid + 1
     return left
 
-def bin_search_left2(arr, x, left=0, right=None, key=identity):  # appeared in Jon Bentley's Programming Pearls sec 9.3
-    # TODO: empirically test against normal binary search for speed
+def bin_search_left2(arr, x, left=0, right=None, key=identity):
+    # this algorithm appeared in Jon Bentley's Programming Pearls sec 9.3. in this implementation, since step size
+    # generation is delegated to yield_while, the empirical speed is about half of bin_search_left
     left -= 1  # left: off the left of the search range
     if right is None:
         right = len(arr)  # right: off the right of the search range
@@ -84,14 +85,6 @@ def filter3(iterable, pivot, key=identity):
     return lt, eq, gt
 
 def filter3_inplace(arr, pivot, key=identity):
-    """
-    Performs filter3 in-place, but not stable. Returns separators i & j, s.t.:
-        key(arr[:i]) < pivot; key(arr[i:j]) == pivot; key(arr[j:]) > pivot
-    :param arr: list[T]
-    :param pivot: K
-    :param key: function[T, k]
-    :return: tuple[int,int]
-    """
     i, j, k = 0, 0, len(arr)  # key(arr[:i]) < pivot; key(arr[i:j]) == pivot; key(arr[k:]) > pivot
     while j < k:
         x = key(arr[j])
@@ -105,7 +98,7 @@ def filter3_inplace(arr, pivot, key=identity):
             arr[j], arr[k-1] = arr[k-1], arr[j]  # swap x with the rightmost unprocessed
             k -= 1
     # assert j == k
-    return i, j
+    return i, j  # note that the array rearrangement is not stable
 
 def filter_index(func, iterable, start=0):
     for i, x in enumerate(iterable):

@@ -10,17 +10,16 @@ def search(hist):
     n = len(hist)
     if n < 3:
         return 0
-    suffix_max = list(stated_map(max, reversed(hist), hist[-1]))  # max of proper suffix
-    del suffix_max[-1]  # equivalent to removing suffix_max[0] after the reverse
-    suffix_max.reverse()  # suffix_max[0] will never be accessed. len(suffix_max) == n - 1
-    gsum = 0  # global sum of reservoir volume
+    suffix_max = list(stated_map(max, reversed(hist), hist[-1]))  # inclusive suffix max
+    suffix_max.reverse()  # suffix_max[0] and suffix_max[-1] will never be accessed
+    vol = 0  # global sum of reservoir volume
     m = hist[0]  # inclusive prefix max
     for i in range(1, n-1):  # hist[0] and hist[-1] can never be a valley
         m = max(m, hist[i])
         cap = min(m, suffix_max[i])
         if cap > hist[i]:
-            gsum += cap - hist[i]
-    return gsum
+            vol += cap - hist[i]
+    return vol
 
 def visualise(hist):
     m, n = max(hist), len(hist)
