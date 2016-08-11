@@ -35,16 +35,34 @@ class MinIndexRangeTree:
         self.cache[(left, right)] = r
         return r
 
-def search(hist):
+def search(hist):  # O(n\log n) time, O(n) space
     def query(left, right):
         if left > right:
             return 0  # base case
         m = rt.get_min(left, right)  # index of the smallest element in hist[left:right+1]
-        return max(hist[m]*(right-left+1), query(left, m-1), query(m+1, right))  # recursive call
+        return max(hist[m] * (right - left + 1), query(left, m - 1), query(m + 1, right))  # recursive call
     if len(hist) == 0:
         return 0
     rt = MinIndexRangeTree(hist)
     return query(0, len(hist) - 1)
+
+def search2(hist):  # O(n) time, O(n) space
+    n = len(hist)
+    if n == 0:
+        return 0
+    hist.append(0)
+    s = []  # stack of indices of an increasing subsequence
+    i = max_area = 0
+    while i < n + 1:
+        if len(s) == 0 or hist[i] > hist[s[-1]]:
+            s.append(i)
+        else:
+            height = hist[s.pop()]
+            width = i if len(s) == 0 else i - 1 - s[-1]
+            max_area = max(max_area, height * width)
+            i -= 1
+        i += 1
+    return max_area
 
 if __name__ == '__main__':
     from lib import rev_range
@@ -56,14 +74,8 @@ if __name__ == '__main__':
             right = next((j for j in range(i+1, n) if hist[j] < x), n)
             max_rec = max(max_rec, x * (right - left - 1))
         return max_rec
-    std_test = {(6, 1, 5, 4, 5, 2, 6): 12}
-    for k, v in std_test.items():
-        assert search(k) == v
-    for size in range(50):
+    for k, v in {(6, 1, 5, 4, 5, 2, 6): 12}.items():
+        assert search(k) == search2(list(k)) == v
+    for size in [x for x in range(100) for _ in range(x)]:
         a = [randint(0, size) for _ in range(size)]
-        assert search(a) == control(a)
-    # range tree for [6, 1, 5, 4, 5, 2, 6]:
-    # 0-6
-    # 0-3/4-6
-    # 0-1/2-3/4-5/6
-    # 0/1/2/3/4/5/None
+        assert search2(a) == control(a)
