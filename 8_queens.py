@@ -16,3 +16,4 @@ if __name__ == '__main__':
     a = np.zeros((N, N), dtype=int)
     for i, x in enumerate(search(a, 0)):
         print('{}\n{}'.format(i, x))
+    assert np.all(a == 0)

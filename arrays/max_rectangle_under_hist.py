@@ -35,7 +35,7 @@ class MinIndexRangeTree:
         self.cache[(left, right)] = r
         return r
 
-def search(hist):  # O(n\log n) time, O(n) space
+def search(hist):  # O(n\log^d n) time, O(n) space
     def query(left, right):
         if left > right:
             return 0  # base case
@@ -50,7 +50,7 @@ def search2(hist):  # O(n) time, O(n) space
     n = len(hist)
     if n == 0:
         return 0
-    hist.append(0)
+    hist.append(0)  # seal right end
     s = []  # stack of indices of an increasing subsequence
     i = max_area = 0
     while i < n + 1:
@@ -58,9 +58,9 @@ def search2(hist):  # O(n) time, O(n) space
             s.append(i)
         else:
             height = hist[s.pop()]
-            width = i if len(s) == 0 else i - 1 - s[-1]
+            width = i if len(s) == 0 else i - 1 - s[-1]  # if 0 exists in the middle of hist, height would be 0 when it's encountered again
             max_area = max(max_area, height * width)
-            i -= 1
+            i -= 1  # pop until s is empty or hist[i] <= hist[s[-1]]
         i += 1
     return max_area
 

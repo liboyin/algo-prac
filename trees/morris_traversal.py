@@ -23,7 +23,7 @@ def in_order(root):
             x = x.right  # may follow a back pointer
         else:
             p = predecessor(x)  # since the predecessor of each node is unique, calculating the predecessor for all
-                # nodes takes only linear time. the overall time complexity hence remains O(n) with a larger constant
+                # nodes takes only linear time. the overall time complexity hence remains O(n)
             if p.right is None:  # first visit to x
                 # for pre-order traversal, yield x.val here
                 p.right = x  # set back pointer
@@ -79,5 +79,5 @@ if __name__ == '__main__':
     from trees.traversal import fast_in_order, fast_post_order
     for size in [x for x in range(1, 100) for _ in range(x)]:
         t = random_bst(size)
-        assert list(in_order(t)) == list(fast_in_order(t))
+        assert list(in_order(t)) == list(fast_in_order(t))  # Morris traversal is not iterator safe
         assert list(post_order(t)) == list(fast_post_order(t))

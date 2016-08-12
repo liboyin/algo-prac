@@ -1,4 +1,4 @@
-from lib import iter_equals, yield_while
+from lib import yield_while
 
 class Link:
     def __init__(self, key, right=None):
@@ -23,7 +23,7 @@ class LinkedList:
 def remove_duplicates(head):  # in-place, O(n^2) time
     left = head
     while left is not None:
-        probe = left
+        probe = left  # inspect probe.right
         while probe is not None:
             if probe.right is not None and probe.right.key == left.key:
                 probe.right = probe.right.right
@@ -38,6 +38,7 @@ if __name__ == '__main__':
             if x not in appeared:
                 yield x
             appeared.add(x)
+    from lib import iter_equals
     from random import randint
     for size in [x for x in range(1, 100) for _ in range(x)]:
         a = [randint(-size, size) for _ in range(size)]

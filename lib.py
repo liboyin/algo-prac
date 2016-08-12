@@ -199,11 +199,20 @@ def sliding_window(iterable, size):
     return zip(*iters)
 
 def unique_randints(lower, upper, n):
+    """
+    Generates a sorted list of n unique random integers within a given range.
+    :param lower: int, inclusive
+    :param upper: int, inclusive
+    :param n: int, non-negative
+    :return: list[int]
+    """
     m = upper - lower + 1
-    assert m >= n
+    assert 0 <= n <= m
     r = []
     for x in range(lower, upper+1):
-        if random.random() <= n / m:  # equivalent to random.randint(0, m - 1) <= n, but the latter is much slower
+        if random.randint(0, m - 1) <= n:  # equivalent to random.random() <= n / m. note that randint() is much
+            # slower compared to random() as it delegates the task to randrange(), but random.random() <= n / m
+            # requires handling division by zero
             r.append(x)
             n -= 1
         m -= 1

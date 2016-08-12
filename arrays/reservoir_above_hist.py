@@ -26,7 +26,7 @@ def visualise(hist):
     t = [[' '] * n for _ in range(m)]
     for i, x in enumerate(hist):
         for j in range(x):
-            t[m - 1 - j][i] = 'x'
+            t[m-1-j][i] = 'x'
     for x in t:
         print(''.join(x))
 
