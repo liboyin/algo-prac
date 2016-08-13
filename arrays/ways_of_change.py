@@ -24,6 +24,20 @@ def search(arr, n):
                 # of dp[j+arr[i]] after addition is correct. as a base case, the initial table [1,0,0,...] is correct
     return dp[-1]
 
+def search2(arr, n):  # if (1, 2) and (2, 1) are counted as different configurations
+    assert n > 0
+    assert all(x > 0 for x in arr)
+    m = len(arr)
+    if m == 0:
+        return 0
+    dp = [0] * (n + 1)
+    dp[0] = 1
+    for j in range(n + 1):  # the sequence between this line and the next is the only difference
+        for x in arr:
+            if dp[j] > 0 and j + x <= n:  # easier to understand if written in minus form
+                dp[j + x] += dp[j]
+    return dp[-1]
+
 if __name__ == '__main__':
     from itertools import product
     from random import randint
@@ -34,8 +48,7 @@ if __name__ == '__main__':
         return c
     for k, v in {((1, 2, 3, 4), 4): 5,  # {1,1,1,1}, {1,1,2}, {1,3}, {2,2}, {4}
                 ((2, 1, 3), 5): 5}.items():  # {1,1,1,1}, {1,1,1,2}, {1,2,2}, {1,1,3}, {2,3}
-        if control(*k) != v:
-            print(control(*k))
+        assert control(*k) == v
     for _ in range(100):
         a = list({randint(1, 10) for _ in range(5)})
         n = randint(10, 20)

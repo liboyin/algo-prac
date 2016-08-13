@@ -1,5 +1,6 @@
 from bisect import bisect_left
 from lib import argmax, bin_search_left, yield_while
+from math import inf
 
 def search(arr):  # binary search, length only. O(n\log n) time
     st = [arr[0]]  # st[i]: smallest tail of LIS of length i + 1. naturally sorted, and all elements are distinct
@@ -40,6 +41,17 @@ def search3(arr):  # DP with reconstruction. O(n^2) time, O(n) space
             dp.append(dp[m] + 1)
             bt.append(m)
     return list(yield_while(argmax(dp), lambda s: s >= 0, lambda s: bt[s]))[::-1]  # indices only
+
+def search_triple(arr):  # returns whether a triple i < j < k exists s.t. arr[i] < arr[j] < arr[k]
+    fst, snd = inf
+    for x in arr:
+        if x < fst:
+            fst = x
+        elif fst < x < snd:
+            snd = x
+        elif x > snd:
+            return True
+    return False
 
 if __name__ == '__main__':
     from random import shuffle

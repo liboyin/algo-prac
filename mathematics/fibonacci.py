@@ -1,5 +1,9 @@
 import numpy as np
 
+def mul(A, B):  # multiply 2 2*2 matrices
+    return ((A[0][0]*B[0][0]+A[0][1]*B[1][0], A[0][0]*B[0][1]+A[0][1]*B[1][1]),
+            (A[1][0]*B[0][0]+A[1][1]*B[1][0], A[1][0]*B[0][1]+A[1][1]*B[1][1]))
+
 def fibonacci(n):
     """
     Computes the n_th Fibonacci number.
@@ -21,7 +25,7 @@ def fibonacci(n):
         if i < n:
             m = m @ x
             n -= i
-    return (m @ np.asarray([1, 1], dtype=int))[0]
+    return m[0].sum()  # equivalent to (m @ np.asarray([1, 1], dtype=int))[0]
 
 def fibonacci2(n):  # tested speed same as non-recursive fibonacci()
     def step(i):
@@ -33,7 +37,7 @@ def fibonacci2(n):  # tested speed same as non-recursive fibonacci()
             return m2 @ np.asarray([[1, 1], [1, 0]], dtype=int)
         return m2
     assert n >= 0
-    return (step(n) @ np.asarray([1, 1], dtype=int))[1]
+    return step(n)[1].sum()  # equivalent to (step(n) @ np.asarray([1, 1], dtype=int))[1]
 
 def last_digit(n):
     a = [1, 1]

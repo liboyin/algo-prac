@@ -9,22 +9,15 @@ def search(arr):
     :param arr: list[num]
     :return: num
     """
-    min_prod = max_prod = global_max = 1
-    for x in arr:
-        assert min_prod <= 1 and max_prod >= 1
-        if x > 0:
-            min_prod = min(1, min_prod * x)  # if falls in [1, inf), then reset
-            max_prod = max(1, max_prod * x)  # if falls in (0, 1), then reset. not possible to fall in (-inf, 0]
-        elif x < 0:
-            temp = min_prod
-            min_prod = max_prod * x  # not possible to fall in [1, inf)
-            max_prod = max(1, temp * x)  # if falls in (-inf, 1], then reset
-        else:
-            min_prod = max_prod = 1  # hard reset
-        global_max = max(global_max, max_prod)
-    if global_max > 1:
-        return global_max
-    return max(arr)  # consider [0.1, -0.2, 0.3]
+    if len(arr) == 1:
+        return arr[0]
+    min_prod = max_prod = gmax = arr[0]
+    for x in arr[1:]:
+        temp = min_prod
+        min_prod = min(x, min_prod * x, max_prod * x)
+        max_prod = max(x, temp * x, max_prod * x)
+        gmax = max(gmax, max_prod)
+    return gmax
 
 if __name__ == '__main__':
     from functools import reduce
@@ -37,11 +30,13 @@ if __name__ == '__main__':
             for j in range(i, n):
                 m = max(m, reduce(mul, arr[i:j+1], 1))
         return m
-    for k, v in {(6, -3, -10, 0, 2): (0, 2, 180),
-                (-1, -3, -10, 0, 60): (4, 4, 60),
-                (-2, -3, 0, -2, -40): (3, 4, 80),
-                (1, -2, -3, 0, 7, -8, -2): (4, 6, 112)}.items():
+    for k, v in {(-1, -1): (0, 1, 1),
+                 (0.1, -0.2, 0.3): (2, 2, 0.3),
+                 (6, -3, -10, 0, 2): (0, 2, 180),
+                 (-1, -3, -10, 0, 60): (4, 4, 60),
+                 (-2, -3, 0, -2, -40): (3, 4, 80),
+                 (1, -2, -3, 0, 7, -8, -2): (4, 6, 112)}.items():
         assert search(k) == v[2]
-    for _ in range(100):
-        a = [randint(-10, 10) for _ in range(100)]
+    for size in [x for x in range(50) for _ in range(x)]:
+        a = [randint(-size, size) for _ in range(size)]
         assert search(a) == control(a)
