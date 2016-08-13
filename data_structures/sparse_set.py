@@ -7,7 +7,7 @@ class SparseDict:
     """
     def __init__(self, upper_bound):  # universe is [0, upper_bound)
         self.sparse = np.empty(upper_bound, dtype=int)  # fixed size, randomly initialised in constant time
-        # in contrast, initialisation and clean-up takes linear time for hash table due to array clean-up
+            # in contrast, initialisation and clean-up takes linear time for hash table due to array clean-up
         self.dense = []  # list[int,T]. the first element is a reverse pointer to sparse
 
     def __len__(self):

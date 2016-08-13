@@ -68,7 +68,10 @@ class MinStack2:  # constant extra space solution. requires numerical elements
         if len(self.s) == 0:
             raise IndexError
         if self.s[-1] >= self.e:  # handles multiple instances of the min element
-            return self.s.pop()
+            temp = self.s.pop()
+            if len(self.s) == 0:
+                self.e = None
+            return temp
         temp = self.e
         self.e = self.e * 2 - self.s[-1]
         del self.s[-1]
