@@ -1,19 +1,21 @@
 import heapq
+import sys
+
+eps = sys.float_info.epsilon
 
 class RunningMedian:
     def __init__(self):
-        self.left = []  # list[T], where T is comparable. max heap of elements smaller than or equal to mid
-        # self.left is implemented as a min heap of negative elements since heapq only supports min heap
-        self.right = []  # list[T]. min heap of elements larger than or equal to mid
-        self.mid = None
+        self.left = []  # max-heap of elements less than or equal to the median
+        self.right = []  # min-heap of elements greater than or equal to the median
 
     def __len__(self):
-        if self.mid is None:
-            return 0
         return len(self.left) + len(self.right) + 1
 
     def push_left(self, item):
         heapq.heappush(self.left, -item)
+
+    def peek_left(self):
+        return -self.left[0]
 
     def pop_left(self):
         return -heapq.heappop(self.left)
@@ -21,53 +23,38 @@ class RunningMedian:
     def push_right(self, item):
         heapq.heappush(self.right, item)
 
+    def peek_right(self):
+        return self.right[0]
+
     def pop_right(self):
         return heapq.heappop(self.right)
 
-    def accept(self, item):
+    def accept(self, num):
         """
-        Returns the left median of the input sequence so far. Denote the input sequence by seq, let n = len(seq):
-        If n is odd, returns sorted(seq)[n//2]; otherwise, returns sorted(seq)[n/2-1].
-        Note that left median only requires T to be comparable, whereas true median requires divisibility by 2.
+        Returns the true median of the input sequence so far. Denote the sorted input sequence by seq, let n = len(seq):
+            If n is odd, returns seq[n//2]; otherwise, returns (seq[n//2-1] + seq[n//2]) / 2.
         Over n calls, time complexity is O(n\log n), space complexity is O(n).
-        :param item: T, comparable
-        :return: T
+        :param item: num
+        :return: num
         """
-        if self.mid is None:  # n == 0
-            self.mid = item
-            return item
         if len(self.left) == 0:
-            if len(self.right) == 0:  # n == 1
-                self.push_right(max(self.mid, item))
-                self.mid = min(self.mid, item)
-            else:  # n == 2
-                xs = sorted([self.mid, self.right[0], item])
-                self.push_left(xs[0])
-                self.mid, self.right[0] = xs[1:]
-            return self.mid
-        # at this stage, 0 < len(self.left) <= len(self.right). equality holds iff n is odd
-        left_max, right_min = -self.left[0], self.right[0]
-        if len(self.left) < len(self.right):  # n is even
-            if item <= self.mid:
-                self.push_left(item)
-            elif self.mid < item <= right_min:
-                self.push_left(self.mid)
-                self.mid = item
-            else:  # right_min < item
-                self.push_right(item)
-                self.push_left(self.mid)
-                self.mid = self.pop_right()
-        else:  # len(self.left) == len(self.right). n is even
-            if item < left_max:
-                self.push_left(item)
-                self.push_right(self.mid)
-                self.mid = self.pop_left()
-            elif left_max <= item < self.mid:
-                self.push_right(self.mid)
-                self.mid = item
-            else:  # self.mid <= item
-                self.push_right(item)
-        return self.mid
+            self.push_left(num)
+        elif len(self.left) == len(self.right):
+            if num <= self.peek_right():
+                self.push_left(num)
+            else:
+                self.push_left(self.pop_right())
+                self.push_right(num)
+        else:
+            assert len(self.left) == len(self.right) + 1
+            if num <= self.peek_left():
+                self.push_right(self.pop_left())
+                self.push_left(num)
+            else:
+                self.push_right(num)
+        if len(self.left) == len(self.right):
+            return (self.peek_left() + self.peek_right()) / 2
+        return self.peek_left()
 
 class RunningAverage:
     def __init__(self):
@@ -90,6 +77,11 @@ if __name__ == '__main__':
         shuffle(rnd_test)
         rm = RunningMedian()
         ra = RunningAverage()
-        for i in range(len(rnd_test)):
-            assert rm.accept(rnd_test[i]) == sorted(rnd_test[:i+1])[i//2]
-            assert abs(ra.accept(rnd_test[i]) - sum(rnd_test[:i+1])/(i+1)) < 0.00001
+        for i in range(size * 2):
+            mean = rm.accept(rnd_test[i])
+            partial = sorted(rnd_test[:i+1])
+            if len(partial) & 1:
+                assert mean == partial[i//2]
+            else:
+                assert abs(mean - (partial[i//2] + partial[i//2+1]) / 2) < eps
+            assert abs(ra.accept(rnd_test[i]) - sum(partial)/(i+1)) < 0.0000001  # seems to be less precise than eps
