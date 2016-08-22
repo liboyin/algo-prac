@@ -1,6 +1,6 @@
 class FenwickTree:
     """
-    adding 1 from index 9 to 0:
+    adding 1 to index in rev_range(10):
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2]
     [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2]
@@ -14,7 +14,7 @@ class FenwickTree:
     """
     def __init__(self, n):
         assert n > 0
-        self.a = [0] * (n + 1)  # bit operations require index to start from 1
+        self.a = [0] * (n + 1)  # bitwise operations require index to start from 1
 
     def __len__(self):
         return len(self.a) - 1
@@ -30,7 +30,7 @@ class FenwickTree:
         assert 0 < i < len(a)
         while i < len(a):  # add forwards
             a[i] += x
-            i += i & -i  # adding 1 to the last 1-bit: 5, 6, 8, 16
+            i += i & -i  # adding 1 to the last 1-bit: 5, 6, 8, 16, ...
 
     def sum(self, i):
         i += 1
@@ -47,10 +47,10 @@ class FenwickTree:
 
 if __name__ == '__main__':
     from random import randint
-    for size in range(1, 64):
+    for size in range(1, 128):
         ft = FenwickTree(size)
         control = [0] * size
-        for _ in range(10):
+        for _ in range(32):
             i, x = randint(0, size-1), randint(0, 10)
             ft.add(i, x)
             control[i] += x

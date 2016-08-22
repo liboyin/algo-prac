@@ -81,7 +81,7 @@ class SparseSet(SparseDict):
             if x in self:
                 del self[x]
 
-if __name__ == '__main__':  # TODO: random test?
+if __name__ == '__main__':
     s = SparseSet(9)
     s.add(8, 6, 3, 1)
     for x in (8, 6, 3, 1):
