@@ -141,6 +141,22 @@ def np_index(*idx):  # NumPy style indexing
         return x
     return index
 
+def randints(lower, upper, n):  # returns a sorted list of n unique random integers within a given range
+    m = upper - lower + 1
+    assert 0 <= n <= m
+    r = []
+    for x in range(lower, upper+1):
+        if n == 0:
+            break
+        assert m >= 1  # if the loop finished by itself, m == 0 afterwards
+        if random.random() <= n / m:  # not equivalent to random.randint(0, m - 1) <= n. given input (0, 1, 1),
+            # the latter always outputs [0]; and with input (0, 10, 2), the latter outputs 3 elements. also note that
+            # the latter is much slower as it delegates the task to random.randrange()
+            r.append(x)  # p(lower) = n / m. if lower is selected, then p(lower+1) = (n-1) / (m-1); otherwise m / (m-1)
+            n -= 1
+        m -= 1
+    return r
+
 def rank(arr, distinct=True):
     a = sorted(enumerate(arr), key=np_index(1))  # (idx, val), sorted by val
     if distinct:
@@ -197,26 +213,6 @@ def sliding_window(iterable, size):
         for _ in range(i):
             next(iters[i], None)
     return zip(*iters)
-
-def unique_randints(lower, upper, n):
-    """
-    Generates a sorted list of n unique random integers within a given range.
-    :param lower: int, inclusive
-    :param upper: int, inclusive
-    :param n: int, non-negative
-    :return: list[int]
-    """
-    m = upper - lower + 1
-    assert 0 <= n <= m
-    r = []
-    for x in range(lower, upper+1):
-        if random.randint(0, m - 1) <= n:  # equivalent to random.random() <= n / m. note that randint() is much
-            # slower compared to random() as it delegates the task to randrange(), but random.random() <= n / m
-            # requires handling division by zero
-            r.append(x)
-            n -= 1
-        m -= 1
-    return r
 
 def yield_while(state, term, trans):
     while term(state):

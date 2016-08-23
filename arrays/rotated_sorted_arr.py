@@ -55,7 +55,7 @@ def index(arr, x):
     return None
 
 if __name__ == '__main__':
-    from lib import unique_randints
+    from lib import randints
     from random import randint
     for k, v in {(3, 1, 2): 1,
                 (2, 4, 0, 1): 2,
@@ -66,7 +66,7 @@ if __name__ == '__main__':
         for i, x in enumerate(k):
             assert index(k, x) == i
     for size in range(1, 1000):
-        a = unique_randints(-size, size, size)
+        a = randints(-size, size, size)
         n = len(a)
         i = randint(0, size-1)
         a = a[i:] + a[:i]

@@ -34,10 +34,10 @@ def two_uniques(iterable):  # all elements but two appear twice
     return a, b
 
 if __name__ == '__main__':
-    from lib import unique_randints
+    from lib import randints
     from random import shuffle
     for size in range(1, 100):  # number of repeating elements
-        repeat = unique_randints(0, 100, size)
+        repeat = randints(0, 100, size)
         unique = repeat[-1] + 1
         rep2 = repeat * 2
         rep2.append(unique)
