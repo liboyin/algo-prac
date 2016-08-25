@@ -35,7 +35,7 @@ def mul(x, y):
 def int_div(x, y):
     """
     Divides two integers using bitwise operators and arithmetic minus.
-    Note that Python integer division is floored when the result is negative. e.g. 8 / -7 = -2.
+    Note that Python integer division is floored when the result is negative. e.g. 8 // -7 = -2.
     Time complexity is O(\log n). Space complexity is O(1).
     :param x: int
     :param y: int

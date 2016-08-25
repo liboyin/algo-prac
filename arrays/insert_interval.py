@@ -32,7 +32,7 @@ def insert2(arr, start, finish):
             r.append(x)
         elif new[1] < x[0]:
             r.append(new)
-            new = x
+            new = x  # rolling new element: also used in adding 1 to a large number represented by an array
         else:
             assert x[1] >= new[0] or new[1] <= x[0]
             new = min(x[0], new[0]), max(x[1], new[1])
