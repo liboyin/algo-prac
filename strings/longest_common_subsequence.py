@@ -34,6 +34,7 @@ def search2(xs, ys):
     Time complexity is O(n^2). Space complexity is O(n^2). However, most cases should be solved in O(n\log n) time.
     Worst case is when xs and ys are both constant strings of the same char. In this case, the reversed index array
         has length mn; and the length of the LIS is 1.
+    LCS is related to finding the minimum number of elements to remove to make two arrays identical.
     :param xs: str
     :param ys: str
     :return: str
