@@ -16,7 +16,7 @@ def search(arr):
     left, right = 1, n - 1
     while left <= right:
         mid = (left + right) // 2
-        if sum(1 for x in arr if x <= mid) == mid:
+        if sum(1 for x in arr if x <= mid) == mid:  # range of sum is constant in each loop
             left = mid + 1
         else:
             right = mid - 1
@@ -43,9 +43,8 @@ def search2(arr):
         fast = arr[fast]
     return slow
 
-def search3(arr):  # only allows even duplications
-    n = len(arr)
-    acc = reduce(xor, range(n), 0)
+def search3(arr):  # requires even number duplications
+    acc = reduce(xor, range(len(arr)), 0)
     return reduce(xor, arr, acc)
 
 if __name__ == '__main__':

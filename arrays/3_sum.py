@@ -1,3 +1,4 @@
+from collections import defaultdict
 from lib import snd
 
 def search(arr, target):
@@ -12,18 +13,14 @@ def search(arr, target):
     n = len(arr)
     if n < 3:
         return
-    d = dict()  # dict[num,set[int]]: arr[i] -> {i}, where i > mid
+    d = defaultdict(lambda: set())
     for i, x in enumerate(arr[2:], start=2):
-        if x in d:
-            d[x].add(i)
-        else:
-            d[x] = {i}
+        d[x].add(i)
     for mid in range(1, n-1):  # all indices with a left and a right
         for left in range(mid):
-            for i in d.get(target-arr[left]-arr[mid], ()):
+            for i in d[target-arr[left]-arr[mid]]:
                 yield left, mid, i  # sequence generation is out-of-order due to the use of set
-        x = d[arr[mid+1]]
-        x.remove(mid + 1)  # removing an empty entry from dict is not necessary
+        d[arr[mid+1]].remove(mid + 1)  # removing an empty entry from dict is not necessary
 
 def search2(arr, target):
     """
@@ -45,10 +42,10 @@ def search2(arr, target):
         while mid < right:  # some have proposed bin_search instead of linear scan. a linear search is able to find
             # the correct index in case of a hit. however, in case of a miss, it would be impossible to decide whether
             # the left or the right cursor should be increased
-            js, xs = zip(*(a[left], a[mid], a[right]))  # 'is' is a system keyword
+            js, xs = zip(a[left], a[mid], a[right])  # 'is' is a system keyword
             s = sum(xs)
             if s == target:
-                yield tuple(sorted(js))
+                yield tuple(sorted(js))  # js is an iterator
                 right -= 1  # repetitions are not handled
             elif s > target:
                 right -= 1
@@ -64,7 +61,7 @@ if __name__ == '__main__':
                 for k in range(j+1, n):
                     if arr[i] + arr[j] + arr[k] == target:
                         yield i, j, k
-    for size in range(3, 50):
+    for size in [x for x in range(3, 32) for _ in range(x)]:
         a = [randint(-size, size) for _ in range(size)]
         t = randint(-size, size)
         pool = set(control(a, t))

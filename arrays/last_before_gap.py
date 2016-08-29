@@ -7,7 +7,7 @@ def search(arr, gap):
     Time complexity is O(n). Space complexity is O(n).
     :param arr: list[num], sorted
     :param gap: num, non-negative
-    :return: list[Optional[int]], length == len(arr)
+    :return: list[Optional[int]]
     """
     assert gap >= 0
     assert is_sorted(arr)
@@ -32,8 +32,7 @@ if __name__ == '__main__':
     for k, v in std_test.items():
         assert search(*k) == v
     from random import randint
-    for size in range(100):
-        arr = sorted(randint(-1000, 1000) for _ in range(size))
-        gap = randint(0, size)
-        control = [next((j for j in rev_range(i) if arr[j] + gap < arr[i]), None) for i in range(size)]
-        assert search(arr, gap) == control
+    for size in [x for x in range(50) for _ in range(x)]:
+        a = sorted(randint(-size, size) for _ in range(size))
+        g = randint(0, size)
+        assert search(a, g) == [next((j for j in rev_range(i) if a[j] + g < a[i]), None) for i in range(size)]

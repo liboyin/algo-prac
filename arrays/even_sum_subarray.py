@@ -1,9 +1,8 @@
 def search(arr):
     """
-    Returns the number of subarrays with even sum.
-    Observation: 1. sum(arr[i,j+1]) == sum(arr[:j+1]) - sum(arr[:i+1]) 2. sum(arr[:0]) == 0
+    Counts subarrays with even sum.
+    Solution is inspired by zero-sum subarray problem.
     Time complexity is O(n). Space complexity is O(1).
-    Same logic applies to finding the number of subarrays whose sum is 0, or is divisible by k.
     :param arr: list[int]
     :return: int
     """
@@ -20,7 +19,7 @@ def search(arr):
 
 if __name__ == '__main__':
     from random import randint
-    def control(arr):
+    def control(arr):  # O(n^3)
         n, c = len(arr), 0
         for i in range(n):
             for j in range(i, n):
@@ -29,6 +28,6 @@ if __name__ == '__main__':
         return c
     for k, v in {(1, 2, 2, 3, 4, 1): 9}.items():
         assert search(k) == v
-    for size in range(100):
-        a = [randint(0, 100) for _ in range(size)]
+    for size in [x for x in range(50) for _ in range(x)]:
+        a = [randint(-size, size) for _ in range(size)]
         assert search(a) == control(a)

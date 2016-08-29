@@ -1,12 +1,12 @@
 from itertools import chain
-from operator import itemgetter as get_item
+from lib import fst
 
 def search(arr, dep):
     assert len(arr) == len(dep)
     arr = [(x, True) for x in arr]
     dep = [(x, False) for x in dep]
     n = n_max = 0
-    for _, x in sorted(chain(arr, dep), key=get_item(0)):
+    for _, x in sorted(chain(arr, dep), key=fst):
         if x:
             n += 1
             n_max = max(n, n_max)

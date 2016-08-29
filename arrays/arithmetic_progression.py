@@ -1,6 +1,6 @@
 def search(arr):
     """
-    Given an arithmetic progression with a missing internal value, returns its insertion point.
+    Given an arithmetic progression with a missing non-boundary element, returns its insertion point.
     Time complexity is O(\log n). Space complexity is O(1).
     :param arr: list[num]. step size must be positive
     :return: int
@@ -10,7 +10,7 @@ def search(arr):
         return None
     assert arr[1] - arr[0] > 0
     left, right = 0, n - 1
-    gap = (arr[right] - arr[left]) / (right - left + 1)  # this line assumes exactly one gap
+    gap = (arr[right] - arr[left]) / (right - left + 1)  # this line requires exactly one missing element
     while left <= right:
         mid = (left + right) // 2
         if arr[mid] == arr[0] + gap * mid:
@@ -22,13 +22,11 @@ def search(arr):
 
 if __name__ == '__main__':
     from random import randint
-    std_test = {(1, 7, 10, 13, 16, 19, 22): 1,
+    for k, v in {(1, 7, 10, 13, 16, 19, 22): 1,
                 (-2, -1, 0, 1, 2, 4): 5,
-                (1, 10, 19, 37, 46): 3}
-    for k, v in std_test.items():
-        if search(k) != v:
-            print(k, search(k))
-    for size in range(4, 1000):
+                (1, 10, 19, 37, 46): 3}.items():
+        assert search(k) == v
+    for size in [x for x in range(4, 200) for _ in range(x)]:
         a = [randint(0, 10)]
         step = randint(1, 10)
         for _ in range(size - 1):

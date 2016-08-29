@@ -202,7 +202,9 @@ def safe_query(arr, i, default):
 def snd(x):
     return x[1]
 
-def stated_map(func, iterable, state):
+def stated_map(func, iterable, state, prefix=False):
+    if prefix:
+        yield state
     for x in iterable:
         state = func(x, state)
         yield state

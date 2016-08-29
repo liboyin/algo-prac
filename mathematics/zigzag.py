@@ -25,7 +25,7 @@ def convert(s, n):
     # assert all(x > 0 for x in j_width)
     j_width[0] = j_width[0] // 2 + 1
     j_width[-1] = j_width[-1] // 2 + 1
-    sum_before = list(stated_map(add, chain([0], j_width), 0))
+    sum_before = list(stated_map(add, j_width, 0, prefix=True))
     # assert sum_before[-1] == m
     r = [None] * m
     for x in range(m):

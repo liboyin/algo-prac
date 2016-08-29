@@ -1,3 +1,4 @@
+from collections import defaultdict
 from operator import itemgetter
 
 def search(arr, target):
@@ -12,17 +13,14 @@ def search(arr, target):
     n = len(arr)
     if n < 4:
         return
-    d = dict()
+    d = defaultdict(lambda: list())
     for i in range(n):
         for j in range(i+1, n):
             s = arr[i] + arr[j]
-            for x, y in d.get(target-s, ()):
+            for x, y in d[target-s]:
                 if i != x and i != y and j != x and j != y:
                     yield tuple(sorted((x, y, i, j)))
-            if s in d:
-                d[s].append((i, j))
-            else:
-                d[s] = [(i, j)]
+            d[s].append((i, j))
 
 def search2(arr, target):
     """
@@ -36,10 +34,7 @@ def search2(arr, target):
     n = len(arr)
     if n < 4:
         return
-    a = []
-    for i in range(n):
-        for j in range(i+1, n):
-            a.append((i, j, arr[i] + arr[j]))
+    a = [(i, j, arr[i] + arr[j]) for i in range(n) for j in range(i+1, n)]
     a.sort(key=itemgetter(2))  # sort on the sum of pairs. this makes the algorithm highly incompatible to repetitions
     left, right = 0, len(a) - 1
     while left < right:
