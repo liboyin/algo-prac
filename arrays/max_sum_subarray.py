@@ -1,9 +1,23 @@
 from lib import argmax, stated_map
 
-def search(arr):  # Kadane's algorithm
-    # key observation:
-    # 1. a max-sum subarray must start & finish with a positive number
-    # 2. it is safe to discard a subarray with a non-positive sum
+def search(arr):
+    """
+    Kadane's algorithm of finding the subarray with the maximum sum.
+    Observation: 1. A max-sum subarray must start & finish with a positive number.
+        2. It is safe to discard a subarray with a non-positive sum.
+    Time complexity is O(n). Space complexity is O(1).
+    Problem from Jon Bentley's Programming Pearls: If all elements are real numbers uniformly distributed in range
+        [-1, 1], what is the expectation of this maximum sum as a function of size?
+    Empirical evidence seems to suggest a log-log linear relationship:
+        size=31, Ex=3.299060207545906
+        size=100, Ex=7.011417260111707
+        size=316, Ex=12.101707427755215
+        size=1000, Ex=22.20458485964562
+        size=3162, Ex=40.07622280167929
+        size=10000, Ex=72.16213987203754
+    :param arr: list[num]
+    :return: num
+    """
     max_sum = max(stated_map(lambda x, s: x + s if x + s > 0 else 0, arr, 0))
     if max_sum > 0:
         return max_sum

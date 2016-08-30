@@ -11,24 +11,21 @@ def search(mat):
     :param mat: list[list[num]]
     :return:  tuple[int,int,int,int,num]. up, down, left, right coordinate of the submatrix and its sum
     """
-    m = len(mat)
-    if m == 0:
+    if not mat or not mat[0]:
         return 0
-    n = len(mat[0])
-    if n == 0:
-        return 0
-    row_range, col_range, sum_max = None, None, -inf  # bottom & down are inclusive
+    m, n = len(mat), len(mat[0])
+    row_range, col_range, max_sum = None, None, -inf  # bottom & down are inclusive
     for top in range(m):
         a = [0] * n
         for bottom in range(top, m):
             for i, x in enumerate(mat[bottom]):
                 a[i] += x
             i, j, s = kadane(a)
-            if s > sum_max:
+            if s > max_sum:
                 row_range = top, bottom
                 col_range = i, j
-                sum_max = s
-    return row_range[0], row_range[1], col_range[0], col_range[1], sum_max
+                max_sum = s
+    return row_range[0], row_range[1], col_range[0], col_range[1], max_sum
 
 def search_k(mat, k):
     """

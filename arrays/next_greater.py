@@ -37,7 +37,7 @@ if __name__ == '__main__':
         return r
     from lib import rev_range
     from random import shuffle
-    for size in [x for x in range(100) for _ in range(x)]:
+    for size in [x for x in range(50) for _ in range(x)]:
         a = list(range(size)) * 2
         shuffle(a)
         assert next_greater(a) == control_next(a)

@@ -4,13 +4,13 @@ from operator import xor
 def search(arr):
     """
     Given an unsorted array of continuous integers with a missing element, finds the missing integer.
-    Solution is inspired by Cuckoo hashing. As a side effect, the array is sorted with a None indicating the missing element.
+    Solution is inspired by Cuckoo hashing. As a side effect, the array is shifted to 0-start and sorted with a None
+        indicating the missing element.
     Time complexity is O(n). Space complexity is O(1).
     :param arr: list[int]
-    :return: Optional[int]. None if the given array is empty or no element is missing
+    :return: Optional[int]. None if the given array is dense or empty
     """
-    n = len(arr)
-    if n == 0:
+    if not arr:
         return None
     m = min(arr)
     for i, x in enumerate(arr):
@@ -33,10 +33,7 @@ def search(arr):
                 temp = arr[j]
                 arr[j] = y
                 j = y = temp
-    for i, x in enumerate(arr[:-1]):
-        if x is None:
-            return i + m
-    return None
+    return None if arr[-1] is None else arr.index(None) + m
 
 def search2(arr):
     """
@@ -46,14 +43,14 @@ def search2(arr):
     :param arr: list[int]
     :return: int
     """
-    if len(arr) == 0:
+    if not arr:
         return 0
     acc = reduce(xor, range(min(arr), max(arr)+1), 0)
     return reduce(xor, arr, acc)
 
 if __name__ == '__main__':
     from random import randint, shuffle
-    for size in [x for x in range(1, 100) for _ in range(x)]:
+    for size in [x for x in range(100) for _ in range(x)]:
         m = randint(-size, size)
         a = list(range(m, m + size + 1))  # +1 for the element to be removed
         i = randint(0, size)
@@ -65,4 +62,4 @@ if __name__ == '__main__':
             assert search(a) is None  # note that search() has side effect on the input array
         else:
             assert search2(a) == k
-            assert search(a) == k
+            assert search(a) == k, (a, search(a), a)

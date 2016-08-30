@@ -10,7 +10,6 @@ def search(arr, k):
     :return: num
     """
     n = len(arr)
-    assert n >= 0
     if n <= 1:
         return 0
     if k == 0:
@@ -29,6 +28,7 @@ def search(arr, k):
     return min_diff
 
 if __name__ == '__main__':
+    from random import randint
     def control(arr, k):
         def bf_all():
             for ds in product(*([(-k, k)] * n)):
@@ -36,18 +36,16 @@ if __name__ == '__main__':
         n = len(arr)
         r = min(bf_all(), key=lambda x: max(x) - min(x))
         return max(r) - min(r)
-    from random import randint
-    std_test = {((1, 5, 15, 10), 3): ((4, 8, 12, 7), 8),
-                ((4, 6), 10): ((14, 16), 2),
-                ((6, 10), 3): ((9, 7), 2),
-                ((1, 10, 14, 14, 15), 6): ((7, 4, 8, 8, 9), 5),
-                ((1, 2, 3), 2): ((3, 4, 5), 2),
-                ((3, 4, 5, 6, 7, 8), 4): ((7, 8, 9, 10, 11, 12), 5),
-                ((1, 5, 6, 7, 8, 9, 10), 6): ((7, -1, 0, 1, 2, 3, 4), 8),
-                ((4, 6), 100): ((104, 106), 2)}  # (arr_in, k) -> (arr_out, diff)
-    for k, v in std_test.items():
+    for k, v in {((1, 5, 15, 10), 3): ((4, 8, 12, 7), 8),  # (arr_in, k) -> (arr_out, diff)
+                 ((4, 6), 10): ((14, 16), 2),
+                 ((6, 10), 3): ((9, 7), 2),
+                 ((1, 10, 14, 14, 15), 6): ((7, 4, 8, 8, 9), 5),
+                 ((1, 2, 3), 2): ((3, 4, 5), 2),
+                 ((3, 4, 5, 6, 7, 8), 4): ((7, 8, 9, 10, 11, 12), 5),
+                 ((1, 5, 6, 7, 8, 9, 10), 6): ((7, -1, 0, 1, 2, 3, 4), 8),
+                 ((4, 6), 100): ((104, 106), 2)}.items():
         assert search(*k) == v[1]
-    for _ in range(100):
-        a = [randint(0, 20) for _ in range(10)]
-        k = randint(1, 30)
+    for size in [x for x in range(15) for _ in range(x)]:
+        a = sorted(randint(0, 2 * size) for _ in range(size))
+        k = randint(-size, size)
         assert search(a, k) == control(a, k)

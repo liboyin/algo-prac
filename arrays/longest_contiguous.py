@@ -3,12 +3,14 @@ def subarray(arr):
     A contiguous subarray of an int array contains all integers from min(sub) to max(sub), inclusive.
     Returns the starting and ending (exclusive) index of the longest contiguous subarray.
     Expected time complexity is O(n^2). Space complexity is O(n).
-    :param arr: list[int]. must not be empty
-    :return: tuple[int, int]
+    It is further possible to reduce the time complexity to O(n\log^2 n) by sliding a variable-size window over arr,
+        whose size is binary searched. To allow min & max query on the window, it has to be implemented as a tree.
+    :param arr: list[int]
+    :return: tuple[int,int]
     """
     n = len(arr)
     assert n > 0
-    left, right = -1, -1
+    left, right = 0, 0
     for i in range(n):
         s = {arr[i]}
         s_min = s_max = arr[i]
@@ -20,12 +22,11 @@ def subarray(arr):
             if s_max - s_min == j - i and j - i > right - left:
                 left, right = i, j
             j += 1
-    return left, right
+    return left, right + 1
 
 def subsequence(arr):
     """
-    A contiguous subsequence of an int array contains all integers from min(sub) to max(sub), inclusive.
-    Returns the length of the longest contiguous subsequence.
+    Returns the length of the longest contiguous subsequence. e.g. f([3, 6, 2, 7, 1]) = 3 for [3, 2, 1]
     Expected time complexity is O(n). Space complexity is O(n).
     :param arr: list[int]
     :return: int
@@ -37,15 +38,15 @@ def subsequence(arr):
         while x + i in arr:
             i += 1
         return i
-    if len(arr) == 0:
+    if not arr:
         return 0
     s = set(arr)
     return max(map(reach, arr))
 
 def subsequence2(arr):  # not as elegant, but same time complexity
-    d = dict()  # dict[int, tuple[int, int]]. x -> min & max element of the longest range containing x
-    for x in arr:
-        # note that in all 4 cases, only edges of a range needs update, hence faster than union-find
+    assert len(arr) == len(set(arr))  # requires unique elements
+    d = dict()  # dict[int,tuple[int,int]]. x -> min & max element of the longest range containing x
+    for x in arr:  # note that in all 4 cases, only edges need update, hence linear time
         if x - 1 in d:
             left = d[x-1][0]
             if x + 1 in d:  # case 1: x joins two ranges
@@ -60,5 +61,51 @@ def subsequence2(arr):  # not as elegant, but same time complexity
             d[x] = x, x
     return max(right - left + 1 for left, right in d.values())
 
-if __name__ == '__main__':  # TODO: random test?
-    print(subsequence2([36, 41, 56, 35, 44, 33, 34, 92, 43, 32, 42]))
+def increasing_subsequence(arr):
+    """
+    Returns the length of the longest contiguously increasing subsequence. e.g. f([4, 3, 1, 2]) = 2 for [1, 2].
+    Solution is DP. Expected time complexity is O(n). Space complexity is O(n).
+    :param arr: list[int]
+    :return: int
+    """
+    if not arr:
+        return 0
+    dp = [1] * len(arr)  # dp[i]: length of the longest CIS ending with arr[i]
+    d = dict()  # x -> index of last occurrence of x in arr[:i]
+    for i, x in enumerate(arr):
+        if x - 1 in d:
+            dp[i] = dp[d[x-1]] + 1
+        d[x] = i
+    return max(dp)
+
+if __name__ == '__main__':
+    from itertools import product
+    from lib import is_sorted, randints, rev_range, sliding_window
+    from random import randint
+    def control_subarray(arr):  # O(n^3)
+        def step(n):
+            for win in sliding_window(arr, n):
+                s = set(win)
+                if len(s) == n and max(s) - min(s) == n - 1:
+                    return True
+            return False
+        return next(i for i in rev_range(len(arr) + 1) if step(i))
+    def control_subsequence(arr, inc=False):  # O(n 2^n)
+        m= 0
+        for mask in product(*([(0, 1)] * len(arr))):
+            sub = [x for x, y in zip(arr, mask) if y]
+            if not sub or (inc and not is_sorted(sub)):
+                continue
+            if len(sub) == len(set(sub)) and max(sub) - min(sub) == len(sub) - 1:
+                m = max(m, mask.count(1))
+        return m
+    for size in [x for x in range(10, 20) for _ in range(x)]:
+        a = [randint(0, size // 5) for _ in range(size)]
+        left, right = subarray(a)
+        s = set(a[left:right])
+        assert len(s) == control_subarray(a)
+        assert max(s) - min(s) == len(s) - 1
+    for size in [x for x in range(15) for _ in range(x)]:
+        a = [randint(0, size // 2) for _ in range(size)]
+        assert subsequence(a) == control_subsequence(a)
+        assert increasing_subsequence(a) == control_subsequence(a, inc=True)

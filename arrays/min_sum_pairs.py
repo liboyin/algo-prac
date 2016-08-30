@@ -11,20 +11,18 @@ def search(xs, ys):
     :param ys: list[num], sorted
     :return: generator[tuple[num,num]]
     """
+    if not xs or not ys:
+        return
     assert is_sorted(xs) and is_sorted(ys)
     m, n = len(xs), len(ys)
-    if m * n == 0:
-        return
     h = [(xs[0] + ys[0], 0, 0)]
     v = {(0, 0)}  # visited indices
-    while True:
-        if len(h) == 0:
-            break
+    while h:
         _, i, j = heapq.heappop(h)
         yield xs[i], ys[j]
         if i < m - 1 and (i+1, j) not in v:
             heapq.heappush(h, (xs[i+1] + ys[j], i + 1, j))
-            v.add((i+1, j))
+            v.add((i+1, j))  # heap size is at most 2/3 * mn
         if j < n - 1 and (i, j+1) not in v:
             heapq.heappush(h, (xs[i] + ys[j+1], i, j + 1))
             v.add((i, j+1))
@@ -52,6 +50,8 @@ def search2(xs, ys):  # O(mn) time, O(m) space
 
 if __name__ == '__main__':
     from itertools import zip_longest
+    from lib import randints
+    from random import randint
     for k, v in {((1,7,11), (2,4,6)):
                  ((1,2),(1,4),(1,6),(7,2),(7,4),(11,2),(7,6),(11,4),(11,6)),
                  ((1,1,2), (1,2,3)):
@@ -60,4 +60,9 @@ if __name__ == '__main__':
         for x, y in zip_longest(search(*k), v):
             assert sum(x) == sum(y)
         for x, y in zip_longest(search2(*k), v):
+            assert sum(x) == sum(y)
+    for size in range(100):
+        xs = randints(0, size * 2, randint(0, size))
+        ys = randints(0, size * 2, randint(0, size))
+        for x, y in zip_longest(search(xs, ys), search2(xs, ys)):
             assert sum(x) == sum(y)

@@ -9,10 +9,9 @@ def search(mat):
     :param mat: list[list[bool]]
     :return: int, non-negative
     """
-    m = len(mat)
-    if m == 0:
+    if not mat or not mat[0]:
         return 0
-    n = len(mat[0])
+    m, n = len(mat), len(mat[0])
     hists = [[0] * n for _ in range(m)]
     hists[0] = mat[0]
     for i in range(1, m):
@@ -20,12 +19,16 @@ def search(mat):
             hists[i][j] = hists[i - 1][j] + 1 if mat[i][j] else 0
     return max(max_rectangle_under_hist(x) for x in hists)
 
-def search2(mat):  # returns the area of the max rectangle whose four corners are all 1s
-    # O(n^3) time, O(1) space. TODO: better time?
-    m = len(mat)
-    if m == 0:
+def search2(mat):
+    """
+    Returns the area of the maximum rectangle whose four corners are all 1s.
+    Time complexity is O(n^3). Space complexity is O(1).
+    :param mat: list[list[bool]]
+    :return: int, non-negative
+    """
+    if not mat or not mat[0]:
         return 0
-    n = len(mat[0])
+    m, n = len(mat), len(mat[0])
     max_area = 0
     for top in range(m):
         for bottom in range(top+1, m):

@@ -2,24 +2,23 @@ from lib import bin_search_right, snd
 
 def search(arr):
     """
-    Given a list of tasks, represented as tuple of starting time, finishing time, and profit. Find the maximum profit
-        achievable by choosing non-conflicting tasks.
+    Given a list of tasks, represented as tuple of starting time, finishing time, and profit (non-negative). Returns
+        the maximum profit achievable by choosing non-conflicting tasks.
     Solution is binary search on tasks sorted by finishing time.
     Time complexity is O(n\log n). Space complexity is O(n).
-    :param arr: list[tuple[num,num,num]]. requires unique finishing time & positive profit
+    :param arr: list[tuple[num,num,num]]. requires unique finishing time
     :return: num
     """
-    n = len(arr)
-    if n == 0:
+    if not arr:
         return 0
     a = sorted(arr, key=snd)  # sort on finishing time
     dp = [0]  # dp[i]: max profit considering a[:i]. when finished, len(dp) == n + 1
     for i, x in enumerate(a):
         start, _, val = x
         j = bin_search_right(a, start, right=i, key=snd) - 1
-        # j: index (in arr) of the last task that has finished before the starting time of this one
+        # j: index (in arr) of the last task that finishes before the starting time of this one
         if j == -1:  # no task finishes before the starting time of this one
-            dp.append(max(dp[-1], val))  # carry over from the previous, or create new sequence of tasks
+            dp.append(max(dp[-1], val))  # carry over from the previous, or start a new sequence of tasks
         else:
             dp.append(max(dp[-1], dp[j+1] + val))  # j + 1 is the index of j in dp
     return dp[-1]

@@ -32,9 +32,9 @@ if __name__ == '__main__':
             a.append(next(j for j in rev_range(i, n) if arr[j] >= x))
         return max(x - i for i, x in enumerate(a))
     for k, v in {(34, 8, 10, 3, 2, 80, 30, 33, 1): (1, 7),  # arr -> i, j. multiple solutions may exist
-                (9, 2, 3, 4, 5, 6, 7, 8, 18, 0): (0, 8),
-                (1, 2, 3, 4, 5, 6): (0, 5),
-                (6, 5, 4, 3, 2, 1): (0, 0)}.items():
+                 (9, 2, 3, 4, 5, 6, 7, 8, 18, 0): (0, 8),
+                 (1, 2, 3, 4, 5, 6): (0, 5),
+                 (6, 5, 4, 3, 2, 1): (0, 0)}.items():
         assert search(k) == v[1] - v[0]
     for size in range(1, 100):
         a = [randint(0, size) for _ in range(size)]

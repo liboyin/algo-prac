@@ -41,7 +41,7 @@ def search(hist):  # O(n\log^d n) time, O(n) space
             return 0  # base case
         m = rt.get_min(left, right)  # index of the smallest element in hist[left:right+1]
         return max(hist[m] * (right - left + 1), query(left, m - 1), query(m + 1, right))  # recursive call
-    if len(hist) == 0:
+    if not hist:
         return 0
     rt = MinIndexRangeTree(hist)
     return query(0, len(hist) - 1)
@@ -53,12 +53,12 @@ def search2(hist):  # O(n) time, O(n) space
     hist.append(0)  # seal right end
     s = []  # stack of indices of an increasing subsequence
     i = max_area = 0
-    while i < n + 1:
-        if len(s) == 0 or hist[i] > hist[s[-1]]:
+    while i <= n:
+        if not s or hist[i] > hist[s[-1]]:
             s.append(i)
         else:
             height = hist[s.pop()]
-            width = i if len(s) == 0 else i - 1 - s[-1]  # if 0 exists in the middle of hist, height would be 0 when it's encountered again
+            width = i if not s else i - 1 - s[-1]  # if 0 exists in the middle of hist, height would be 0 when it's encountered again
             max_area = max(max_area, height * width)
             i -= 1  # pop until s is empty or hist[i] <= hist[s[-1]]
         i += 1
