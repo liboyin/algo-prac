@@ -18,7 +18,7 @@ def dec_to_roman(x):
 def roman_to_dec(xs):
     d = dict(zip(ROM, DEC))
     r = 0
-    while len(xs) > 0:
+    while xs:
         if xs[:2] in d:
             r += d[xs[:2]]
             xs = xs[2:]

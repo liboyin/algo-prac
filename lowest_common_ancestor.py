@@ -11,7 +11,7 @@ class Node:
 
 def preprocess(root, layer_depth):  # layer_depth = sqrt(n). O(n) time
     q = deque([(root, 0, root)])  # deque[Node, int, Node]. BFS queue
-    while len(q) > 0:
+    while q:
         node, depth, ancestor = q.popleft()
         node.depth = depth
         node.layer = depth // layer_depth

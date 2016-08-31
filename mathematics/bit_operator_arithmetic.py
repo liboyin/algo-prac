@@ -1,4 +1,4 @@
-from math import inf
+from math import inf, nan
 
 def add(x, y):
     """
@@ -28,13 +28,13 @@ def mul(x, y):
     while y > 0:
         if y & 1:
             r = add(r, x)
-        x <<= 1
+        x <<= 1  # in C/Java, x has to be casted to 64-bit int to avoid overflow
         y >>= 1
     return r
 
 def int_div(x, y):
     """
-    Divides two integers using bitwise operators and arithmetic minus.
+    Divides two integers using bitwise operators and arithmetic plus & minus.
     Note that Python integer division is floored when the result is negative. e.g. 8 // -7 = -2.
     Time complexity is O(\log n). Space complexity is O(1).
     :param x: int
@@ -42,7 +42,7 @@ def int_div(x, y):
     :return: int
     """
     if x == 0:
-        return -1 if y == 0 else 0  # 0 / 0 = -1; 0 / x = 0
+        return nan if y == 0 else 0  # 0 / 0 = NaN; 0 / x = 0
     if y == 0:
         return inf if x > 0 else -inf  # x / 0 = \inf
     if x < 0:
@@ -58,11 +58,11 @@ def int_div(x, y):
     # reverse bit multiplication
     assert x > y > 0
     i, y1 = 0, y
-    while y1 <= x:
+    while y1 <= x:  # find greatest i, where y * 2 ** i <= x
         i += 1
         y1 <<= 1
     r = 0
-    while y1 >= y:
+    while y1 >= y:  # subtract y * 2 ** i, with decreasing i
         if x >= y1:
             x -= y1
             r |= 1 << i

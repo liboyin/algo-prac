@@ -20,13 +20,6 @@ def first_kind(n, k):
             dp[i][j] = dp[i - 1][j - 1] + (i - 1) * dp[i - 1][j]
     return dp[-1][-1]
 
-def first_kind2(n, k):
-    if n == k:
-        return 1
-    if k == 0:
-        return 0
-    return first_kind2(n - 1, k - 1) + (n - 1) * first_kind2(n - 1, k)
-
 def second_kind(n, k):
     """
     Denote by S(n, k) the number of ways n elements can be arranged as k non-empty sets.
@@ -49,15 +42,20 @@ def second_kind(n, k):
             dp[i][j] = dp[i - 1][j - 1] + j * dp[i - 1][j]
     return dp[-1][-1]
 
-def second_kind2(n, k):
-    if n == k:
-        return 1
-    if k == 0:
-        return 0
-    return second_kind2(n - 1, k - 1) + k * second_kind2(n - 1, k)
-
 if __name__ == '__main__':
+    def control1(n, k):
+        if n == k:
+            return 1
+        if k == 0:
+            return 0
+        return control1(n - 1, k - 1) + (n - 1) * control1(n - 1, k)
+    def control2(n, k):
+        if n == k:
+            return 1
+        if k == 0:
+            return 0
+        return control2(n - 1, k - 1) + k * control2(n - 1, k)
     for n in range(10):
         for k in range(n + 1):
-            assert first_kind(n, k) == first_kind2(n, k)
-            assert second_kind(n, k) == second_kind2(n, k)
+            assert first_kind(n, k) == control1(n, k)
+            assert second_kind(n, k) == control2(n, k)

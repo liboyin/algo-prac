@@ -9,7 +9,7 @@ def merge(*iters):  # len() is not supported on iterators
                 # as a tie breaker. as a result, the output sequence is stable
             break
     heapq.heapify(h)
-    while len(h) > 0:
+    while h:
         x, i, ite = h[0]
         yield x
         for x in ite:  # add tuple back to h, unless empty

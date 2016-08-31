@@ -1,5 +1,5 @@
 from lib import argmax, identity, rev_range
-from math import log2
+from math import ceil, log2
 
 class MinMaxHeap:
     """
@@ -77,7 +77,6 @@ class MinMaxHeap:
         if i * 2 + 1 >= len(a):  # i has no children
             return
         m = min(self.cngc(i), key=lambda x: f(x[1]))[0]  # index of the smallest child or grandchild
-        # m = min(self.cngc(i), key=lambda j: f(a[j]) if j<len(a) else inf)  # index of the smallest child or grandchild
         if a[m] < a[i]:
             a[m], a[i] = a[i], a[m]  # if m is a child of i, after the swap, min heap property at m is intact
             if m > i * 2 + 2:  # m is a grandchild of i
@@ -91,7 +90,6 @@ class MinMaxHeap:
         if i * 2 + 1 >= len(a):  # i has no children
             return
         m = max(self.cngc(i), key=lambda x: f(x[1]))[0]  # index of the largest child or grandchild
-        # m = max(self.cngc(i), key=lambda j: f(a[j]) if j<len(a) else -inf)  # index of the largest child or grandchild
         if a[m] > a[i]:
             a[m], a[i] = a[i], a[m]  # if m is a child of i, after the swap, max heap property at m is intact
             if m > i * 2 + 2:  # m is a grandchild of i
@@ -111,13 +109,13 @@ class MinMaxHeap:
         self.bubble_up(len(self.a) - 1)
 
     def peek_min(self):
-        if len(self.a) == 0:
+        if not self.a:
             raise KeyError
         return self.a[0]
 
     def pop_min(self):
         a = self.a
-        if len(a) == 0:
+        if not a:
             raise KeyError
         a[0], a[-1] = a[-1], a[0]
         r = a.pop()
@@ -125,13 +123,13 @@ class MinMaxHeap:
         return r
 
     def peek_max(self):
-        if len(self.a) == 0:
+        if not self.a:
             raise KeyError
         return max(self.a[:3], key=self.key)
 
     def pop_max(self):
         a = self.a
-        if len(a) == 0:
+        if not a:
             raise KeyError
         i = argmax(a[:3], key=self.key)
         a[i], a[-1] = a[-1], a[i]
@@ -152,10 +150,9 @@ class MinMaxHeap:
         return True
 
 if __name__ == '__main__':
-    from math import ceil, floor
+    from math import floor
     from random import shuffle
-    size = 100
-    for _ in range(10):
+    for size in [x for x in range(25) for _ in range(x)]:
         rnd_test = list(range(size)) * 2
         shuffle(rnd_test)
         h = MinMaxHeap(rnd_test[:size//2])
@@ -164,7 +161,7 @@ if __name__ == '__main__':
             h.add(x)
             assert h.verify()
         i, j = 0, size - 1
-        while len(h) > 0:
+        while h:
             assert h.pop_min() == floor(i)
             assert h.verify()
             assert h.pop_max() == ceil(j)

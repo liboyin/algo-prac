@@ -1,3 +1,4 @@
+from functools import lru_cache
 from math import sqrt
 
 def factorise(n):
@@ -18,7 +19,8 @@ def factorise(n):
             i += 1
     return r
 
-def search(n):  # TODO: time complexity ???
+@lru_cache()
+def search(n):  # TODO: time complexity with caching???
     """
     Finds all non-trivial (not including 1 or self) factorisations of an integer.
     :param n: int, positive
@@ -29,7 +31,7 @@ def search(n):  # TODO: time complexity ???
         if n % i == 0:
             m = n // i
             for xs in search(m):
-                if xs[0] >= i:
+                if xs[0] >= i:  # factors are in ascending order
                     r.append((i,) + xs)
             r.append((i, m))
     return r
