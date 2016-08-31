@@ -27,7 +27,7 @@ def search(xs, ys):
             heapq.heappush(h, (xs[i] + ys[j+1], i, j + 1))
             v.add((i, j+1))
 
-def search2(xs, ys):  # O(mn) time, O(m) space
+def search2(xs, ys):  # O(mn) time, O(m) space TODO: review
     assert is_sorted(xs) and is_sorted(ys)
     m, n = len(xs), len(ys)
     r = [None] * (m * n)

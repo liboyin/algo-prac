@@ -15,9 +15,8 @@ def min_mat_multi(arr):  # O(n^3) time, O(n^2) space
             i += 1
     return dp[0][-1]
 
-if __name__ == '__main__':  # TODO: random test?
-    std_test = {(40, 20, 30, 10, 30): 26000,
-                (10, 20, 30, 40, 30): 30000,
-                (10, 20, 30): 6000}
-    for k, v in std_test.items():
+if __name__ == '__main__':
+    for k, v in {(40, 20, 30, 10, 30): 26000,
+                 (10, 20, 30, 40, 30): 30000,
+                 (10, 20, 30): 6000}.items():
         assert min_mat_multi(k) == v

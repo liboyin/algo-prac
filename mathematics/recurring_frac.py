@@ -10,9 +10,9 @@ def search(a, b):
     """
     div = ''
     d = dict()  # dict[int,int]: remainder -> index of (rem // b) in div
-    rem = a % b
-    while rem not in d:
-        d[rem] = len(div)
+    rem = a % b  # starts from the first digit after the point
+    while rem not in d:  # the loop runs once more if rem == 0
+        d[rem] = len(div)  # len(div) increases by exactly 1 each iteration
         rem *= 10
         div += str(rem // b)
         rem %= b

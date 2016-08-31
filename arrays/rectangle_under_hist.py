@@ -46,7 +46,7 @@ def search(hist):  # O(n\log^d n) time, O(n) space
     rt = MinIndexRangeTree(hist)
     return query(0, len(hist) - 1)
 
-def search2(hist):  # O(n) time, O(n) space
+def search2(hist):  # O(n) time, O(n) space TODO: review
     n = len(hist)
     if n == 0:
         return 0

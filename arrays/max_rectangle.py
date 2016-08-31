@@ -1,4 +1,4 @@
-from arrays.max_rectangle_under_hist import search2 as max_rectangle_under_hist
+from arrays.rectangle_under_hist import search2 as max_rectangle_under_hist
 from lib import rev_range
 
 def search(mat):
