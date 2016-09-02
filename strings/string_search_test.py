@@ -1,4 +1,5 @@
 import re
+import time
 from strings.boyer_moore import search as search_bm
 from strings.boyer_moore import search2 as search_za
 from strings.knuth_morris_pratt import search as search_kmp
@@ -49,10 +50,21 @@ The individuals who make these disclosures feel so strongly about what they have
 And there are more of us than there are of them.
 From by Jeremy Scahill and the staff of The Intercept, with a foreword by Edward Snowden and afterword by Glenn Greenwald, published by Simon & Schuster.
 '''.split()
-t = ''.join(ps)  # spaces make search too easy
+text = ''.join(ps)  # spaces make search too easy
+times = [0] * 4
 for p in ps:
-    control = [x.start() for x in re.finditer(re.escape(p), t)]  # all non-overlapping matches
-    bm = list(search_bm(t, p))
-    za = list(search_za(t, p))
-    kmp = list(search_kmp(t, p))
+    t0 = time.time()
+    control = [x.start() for x in re.finditer(re.escape(p), text)]  # all non-overlapping matches
+    times[0] += time.time() - t0
+    t0 = time.time()
+    bm = list(search_bm(text, p))
+    times[1] += time.time() - t0
+    t0 = time.time()
+    za = list(search_za(text, p))
+    times[2] += time.time() - t0
+    t0 = time.time()
+    kmp = list(search_kmp(text, p))
+    times[3] += time.time() - t0
     assert control == bm == za == kmp
+print('re = {0:.2f}, bm = {1:.2f}, za = {2:.2f}, kmp = {3:.2f}'.format(*times))
+# re = 0.28, bm = 20.29, za = 42.87, kmp = 12.51

@@ -12,7 +12,7 @@ def repeat_two(iterable):
     return reduce(xor, iterable, 0)
 
 def repeat_three(iterable):  # all elements but one appear 3 times
-    ones, twos = 0, 0
+    ones = twos = 0
     for x in iterable:
         twos |= ones & x  # when x appears the first time, x is not recorded; second time, x is recorded; third time, x is recorded
         ones ^= x  # when x appears the first time, x is recorded; second time, x is cleared; third time, x is recorded

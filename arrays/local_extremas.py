@@ -49,10 +49,8 @@ def longest_alternating_subsequence(arr):
     :return: list[int]
     """
     n = len(arr)
-    if n == 0:
-        return []
-    if n == 1:
-        return [arr[0]]
+    if n <= 1:
+        return arr
     las = []
     if arr[0] != arr[1]:
         las.append(0)
