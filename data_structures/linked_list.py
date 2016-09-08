@@ -16,6 +16,12 @@ class LinkedList:
             last.right = new
             last = new
 
+    def reverse(self):
+        h, r = self.head, None  # h, r: tail and head of the reversed sublist
+        while h:
+            h.right, r, h = r, h, h.right
+        self.head = r
+
     def __iter__(self):
         for y in yield_while(self.head, lambda x: x is not None, lambda x: x.right):
             yield y.key
@@ -32,16 +38,18 @@ def remove_duplicates(head):  # in-place, O(n^2) time
         left = left.right
 
 if __name__ == '__main__':
+    from lib import iter_equals
+    from random import randint
     def control(arr):
         appeared = set()
         for x in arr:
             if x not in appeared:
                 yield x
             appeared.add(x)
-    from lib import iter_equals
-    from random import randint
-    for size in [x for x in range(1, 100) for _ in range(x)]:
+    for size in [x for x in range(50) for _ in range(x)]:
         a = [randint(-size, size) for _ in range(size)]
-        ll = LinkedList(a)
+        ll = LinkedList(reversed(a))
+        ll.reverse()
+        assert iter_equals(ll, a)
         remove_duplicates(ll.head)
         assert iter_equals(ll, control(a))

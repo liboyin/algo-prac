@@ -2,9 +2,12 @@ from itertools import product
 
 def search(arr, k):
     """
-    Given an array of numbers, and a positive number k. For each element in arr, either increase its value by k, or
-    decrease its value by k. Choose directions of update, s.t. the maximum difference between any two elements in the
-    resulting array is minimised. Time complexity is O(n).
+    Given an array of numbers, and a number k. For each element in arr, either increase its value by k, or decrease
+        its value by k. Choose directions of update, s.t. the maximum difference between any two elements in the
+        resulting array is minimised.
+    Observation: In the sorted array there must be such a boundary, to whose left all numbers are increased, and to
+        whose right all numbers are decreased.
+    Time complexity is O(n).
     :param arr: list[num]
     :param k: num
     :return: num

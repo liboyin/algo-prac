@@ -13,7 +13,7 @@ def search(arr, target):
     n = len(arr)
     if n < 3:
         return
-    d = defaultdict(lambda: set())
+    d = defaultdict(set)
     for i, x in enumerate(arr[2:], start=2):
         d[x].add(i)
     for mid in range(1, n-1):  # all indices with a left and a right

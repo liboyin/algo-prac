@@ -18,9 +18,7 @@ def product(*iters, reverse=False):
             yield tuple(xs)
         else:
             for y in iters[i]:
-                new = list(xs)
-                new.append(y)
-                q.append((new, i + 1))
+                q.append((xs + [y], i + 1))
 
 if __name__ == '__main__':
     from itertools import product as control

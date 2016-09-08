@@ -11,7 +11,7 @@ def search(arr):
     n = len(arr)
     if n == 0:
         return
-    d = defaultdict(lambda: set())  # dict[int, set[int]]. sum(arr[:i]) -> {i}
+    d = defaultdict(set)  # dict[int, set[int]]. sum(arr[:i]) -> {i}
     d[0].add(0)
     s = 0
     for i, x in enumerate(arr):

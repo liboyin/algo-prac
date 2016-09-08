@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 class Link:
     def __init__(self, key, val):
         self.key = key
@@ -75,3 +77,23 @@ class LRUCache:  # re-implementation of functools.lru_cache
             new = Link(key, val)
             self.ins_to_head(new)
             self.d[key] = new
+
+class LRU_Cache2:
+    def __init__(self, n):
+        self.d = OrderedDict()
+        self.n = n
+
+    def __getitem__(self, key):
+        v = self.d.pop(key)
+        self.d[key] = v
+        return v
+
+    def __setitem__(self, key, val):
+        if key in self.d:
+            self.d.pop(key)
+        else:
+            if self.n > 0:
+                self.n -= 1
+            else:
+                self.d.popitem(last=False)
+        self.d[key] = val

@@ -12,13 +12,9 @@ def search(arr, k):
     :return: int
     """
     assert k >= 0
-    assert all(x >= 0 for x in arr)
-    n = len(arr)
-    if n == 0:
+    if not arr:
         return 0
-    m = max(arr)
-    assert m > 0
-    dp = [0] * (2 ** (floor(log2(m)) + 1))  # [0] * (c + 1)
+    dp = [0] * (2 ** (floor(log2(max(arr))) + 1))  # [0] * (c + 1)
     dp[0] = dp[arr[0]] = 1
     for i, x in enumerate(arr[1:], start=1):
         dp1 = list(dp)
@@ -29,19 +25,18 @@ def search(arr, k):
 
 if __name__ == '__main__':
     from functools import reduce
-    from itertools import product
+    from itertools import compress, product
     from operator import xor
     from random import randint
     def control(arr, k):
-        n, c = len(arr), 0
-        for xs in product(*([(0, 1)] * n)):
-            c += (reduce(xor, [y for x, y in zip(xs, arr) if x], 0) == k)
-        return c - 1 if k == 0 else c  # selecting 0 element is not valid
-    std_test = {((6, 9, 4, 2), 6): 2,
-                ((1, 2, 3, 4, 5), 4): 4}
-    for k, v in std_test.items():
+        c = 0
+        for mask in product(*([(0, 1)] * len(arr))):
+            c += reduce(xor, compress(arr, mask), 0) == k
+        return c - 1 if k == 0 else c
+    for k, v in {((6, 9, 4, 2), 6): 2,
+                 ((1, 2, 3, 4, 5), 4): 4}.items():
         assert search(*k) == v
-    for size in list(range(11)) * 10:
-        rnd_test = [randint(1, size) for _ in range(size)]
+    for size in [x for x in range(15) for _ in range(x)]:
+        a = [randint(1, size) for _ in range(size)]
         k = randint(0, size // 2)
-        assert search(rnd_test, k) == control(rnd_test, k)
+        assert search(a, k) == control(a, k)

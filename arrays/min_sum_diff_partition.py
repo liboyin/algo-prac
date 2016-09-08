@@ -65,10 +65,7 @@ if __name__ == '__main__':
             rs = sum(y for x, y in zip(xs, arr) if not x)
             m = min(m, abs(ls - rs))
         return 0 if n == 0 else m
-    for size in range(10):
-        for _ in range(100):
-            a = [randint(0, size) for _ in range(size)]
-            left, right = search2(a)
-            assert abs(sum(left) - sum(right)) == control(a)
-    # print(search([1, 5, 6], k=0))
-    # print(search2([1, 5, 6, 11]))
+    for size in [x for x in range(15) for _ in range(x)]:
+        a = [randint(0, size) for _ in range(size)]
+        ls, rs = search2(a)
+        assert abs(sum(ls) - sum(rs)) == control(a)

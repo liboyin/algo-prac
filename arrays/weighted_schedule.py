@@ -24,18 +24,16 @@ def search(arr):
     return dp[-1]
 
 if __name__ == '__main__':
-    from itertools import product
+    from itertools import compress, product
     from lib import fst, sliding_window
-    from math import inf
     from random import randint
-    from operator import itemgetter
     def control(arr):  # O(n 2^n)
-        n, max_sum = len(arr), -inf
-        for mask in product(*([(0, 1)] * n)):
-            a = sorted([x for x, y in zip(arr, mask) if y], key=fst)  # selected tasks, sorted by starting time
+        def step(mask):
+            a = sorted(compress(arr, mask), key=fst)  # selected tasks, sorted by starting time
             if all(x[1] <= y[0] for x, y in sliding_window(a, 2)):
-                max_sum = max(max_sum, sum(map(itemgetter(2), a)))
-        return max_sum
+                return sum(x[2] for x in a)
+            return 0
+        return max(step(m) for m in product(*([(0, 1)] * len(arr))))
     for k, v in {((3, 10, 20), (1, 2, 50), (6, 19, 100), (10, 100, 200)): 270,
                  ((3, 10, 20), (1, 2, 50), (6, 19, 100), (2, 100, 200)): 250}.items():
         assert search(k) == v

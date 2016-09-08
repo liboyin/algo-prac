@@ -177,15 +177,6 @@ def record_class(name, args, scope):
     exec('\n'.join(code), scope)
     return scope[name]
 
-def remove_duplicates(iterable):  # side note: duplication removal on array must be performed backwards
-    it = iter(iterable)
-    prev = next(it)  # if iterable is empty, raises StopIteration
-    yield prev
-    for x in it:
-        if x != prev:
-            yield x
-            prev = x
-
 def rev_enumerate(iterable):
     return reversed(list(enumerate(iterable)))
 

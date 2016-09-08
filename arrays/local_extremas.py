@@ -64,14 +64,14 @@ def longest_alternating_subsequence(arr):
     return las
 
 if __name__ == '__main__':  # for problems on local min/max, take extra care on repetitions
-    from lib import remove_duplicates
+    from itertools import groupby
     from random import randint
     for _ in range(1000):
         def q(i):
             if 0 <= i < len(a):
                 return a[i]
             return -inf
-        a = list(remove_duplicates(randint(-100, 100) for _ in range(100)))
+        a = list(x for x, _ in groupby(randint(-100, 100) for _ in range(100)))
         any_lm = any_local_max(a)
         all_lm = list(all_local_max(a))
         las = longest_alternating_subsequence(a)

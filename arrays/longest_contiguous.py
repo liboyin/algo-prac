@@ -79,8 +79,8 @@ def increasing_subsequence(arr):
     return max(dp)
 
 if __name__ == '__main__':
-    from itertools import product
-    from lib import is_sorted, randints, rev_range, sliding_window
+    from itertools import compress, product
+    from lib import is_sorted, rev_range, sliding_window
     from random import randint
     def control_subarray(arr):  # O(n^3)
         def step(n):
@@ -91,9 +91,9 @@ if __name__ == '__main__':
             return False
         return next(i for i in rev_range(len(arr) + 1) if step(i))
     def control_subsequence(arr, inc=False):  # O(n 2^n)
-        m= 0
+        m = 0
         for mask in product(*([(0, 1)] * len(arr))):
-            sub = [x for x, y in zip(arr, mask) if y]
+            sub = list(compress(arr, mask))
             if not sub or (inc and not is_sorted(sub)):
                 continue
             if len(sub) == len(set(sub)) and max(sub) - min(sub) == len(sub) - 1:

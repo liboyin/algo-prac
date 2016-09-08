@@ -1,4 +1,5 @@
 from arrays.longest_increasing_subsequence import search2 as longest_increasing_subsequence
+from collections import defaultdict
 from lib import rev_enumerate
 
 def search(xs, ys):  # DP with reconstruction. O(mn) time & space
@@ -41,30 +42,27 @@ def search2(xs, ys):
     """
     if len(xs) > len(ys):  # build dictionary on the shorter string
         return search2(ys, xs)
-    d = dict()  # dict[char, list[int]]. for each char, reversed sequence of occurrence in xs
+    d = defaultdict(list)  # dict[char,list[int]]. for each char, reversed sequence of occurrence in xs
     for i, x in rev_enumerate(xs):
-        if x in d:
-            d[x].append(i)
-        else:
-            d[x] = [i]
-    ys1, idx = zip(*[(y, i) for y in ys for i in d.get(y, ())])
+        d[x].append(i)
+    yi = [(y, i) for y in ys for i in d[y]]
+    if not yi:
+        return []
+    ys1, idx = zip(*yi)
     return [ys1[i] for i in longest_increasing_subsequence(idx)]
 
 def is_subsequence_of(sub, arr):
-    i = 0  # cursor on arr
-    for j in range(len(sub)):
-        while i < len(arr) and arr[i] != sub[j]:
-            i += 1
-        if i == len(arr):
-            return False
-    return True
+    if len(sub) == 0:
+        return True
+    ite = iter(arr)  # searches in one direction only
+    return all(x in ite for x in sub)
 
 if __name__ == '__main__':
     from string import ascii_lowercase as alphabet
     from random import choice
-    for _ in range(100):
-        xs = [choice(alphabet) for _ in range(100)]
-        ys = [choice(alphabet) for _ in range(100)]
+    for size in [x for x in range(50) for _ in range(x)]:
+        xs = ''.join(choice(alphabet) for _ in range(size))
+        ys = ''.join(choice(alphabet) for _ in range(size))
         dp = search(xs, ys)
         lis = search2(xs, ys)
         assert len(dp) == len(lis)  # exact subsequence may differ

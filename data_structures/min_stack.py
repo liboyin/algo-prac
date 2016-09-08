@@ -1,35 +1,28 @@
-class MinStack:  # linear extra space solution
+class MinStack:
     def __init__(self):
-        self.s = []  # normal stack
-        self.a = []  # auxiliary non-increasing subsequence of stack, starting from self.s[0]
+        self.s = []
 
     def __len__(self):
         return len(self.s)
 
     def __iter__(self):
-        return iter(self.s)
+        for x, _ in self.s:
+            yield x
 
     def __repr__(self):
-        return 'stack={}, aux={}'.format(self.s, self.a)
+        return 'stack={}'.format(self.s)
 
     def push(self, item):
-        self.s.append(item)
-        if len(self.a) == 0 or item <= self.a[-1]:
-            self.a.append(item)
+        self.s.append((x, min(x, self.s[-1][1])) if self.s else (x, x))
 
     def peek_top(self):
-        return self.s[-1]
+        return self.s[-1][0]
 
     def peek_min(self):
-        return self.a[-1]
+        return self.s[-1][1]
 
     def pop(self):
-        if len(self.s) == 0:
-            raise IndexError
-        temp = self.s.pop()
-        if temp == self.a[-1]:
-            self.a.pop()
-        return temp
+        return self.s.pop()[0]
 
 class MinStack2:  # constant extra space solution. requires numerical elements
     def __init__(self):

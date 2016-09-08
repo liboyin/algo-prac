@@ -13,7 +13,7 @@ def search(arr, target):
     n = len(arr)
     if n < 4:
         return
-    d = defaultdict(lambda: list())
+    d = defaultdict(list)
     for i in range(n):
         for j in range(i+1, n):
             s = arr[i] + arr[j]
