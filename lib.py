@@ -65,20 +65,18 @@ def fails_as(exception, func, *args, **kwargs):  # returns whether a function th
         return False
 
 def filter2(func, iterable):
-    ts, fs = [], []
+    rs = [[], []]  # [negatives, positives]
     for x in iterable:
-        if func(x):
-            ts.append(x)
-        else:
-            fs.append(x)
-    return ts, fs
+        rs[int(func(x))].append(x)
+    return rs
 
 def filter3(iterable, pivot, key=identity):
     lt, eq, gt = [], [], []
     for x in iterable:
-        if key(x) < pivot:
+        k = key(x)
+        if k < pivot:
             lt.append(x)
-        elif key(x) > pivot:
+        elif k > pivot:
             gt.append(x)
         else:
             eq.append(x)

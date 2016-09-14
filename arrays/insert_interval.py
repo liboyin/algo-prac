@@ -24,7 +24,7 @@ def insert(arr, start, finish):
     new_end = max(arr[right][1], finish)
     return list(arr[:left]) + [(new_start, new_end)] + list(arr[right+1:])
 
-def insert2(arr, start, finish):
+def insert2(arr, start, finish):  # also works for merging intervals sorted by starting time
     r = []
     new = start, finish
     for x in arr:
@@ -35,7 +35,7 @@ def insert2(arr, start, finish):
             new = x  # rolling new element: also used in adding 1 to a large number represented by an array
         else:
             assert x[1] >= new[0] or new[1] <= x[0]
-            new = min(x[0], new[0]), max(x[1], new[1])
+            new = min(x[0], new[0]), max(x[1], new[1])  # do not append until an interval has ended
     r.append(new)
     return r
 

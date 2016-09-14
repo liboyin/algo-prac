@@ -5,6 +5,7 @@ def search(arr):
     Finds all non-empty subarrays whose sum is zero.
     Observation: 1. sum(arr[i,j+1]) == sum(arr[:j+1]) - sum(arr[:i+1]); 2. sum(arr[:0]) == 0
     Expected time complexity is O(n). Space complexity is O(n).
+    By changing all 0 to -1, the same algorithm finds the longest subarray with equal number of 0s and 1s.
     :param arr: list[int]
     :return: generator[tuple[int,int]]
     """
