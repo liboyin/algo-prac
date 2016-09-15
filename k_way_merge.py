@@ -1,12 +1,12 @@
 import heapq
 
-def merge(*iters):  # len() is not supported on iterators
+def merge(*iters):
     h = []
     for i, xs in enumerate(iters):
         ite = iter(xs)
         for x in ite:
-            h.append((x, i, ite))  # heapq resolves ties by looking at the next element of tuple. here, index is added
-                # as a tie breaker. as a result, the output sequence is stable
+            h.append((x, i, ite))  # heapq resolves ties between tuples by looking at the next element. here, index
+                # is added as a tie breaker. as a result, the output sequence is stable
             break
     heapq.heapify(h)
     while h:
@@ -22,9 +22,9 @@ if __name__ == '__main__':
     from lib import is_sorted
     from random import randint
     for _ in range(100):
-        arr = [[] for _ in range(10)]
-        for x in arr:
+        a = [[] for _ in range(10)]
+        for x in a:
             for _ in range(randint(0, 5)):
                 x.append(randint(0, 10))
             x.sort()
-        assert is_sorted(tuple(merge(*arr)))
+        assert is_sorted(tuple(merge(*a)))

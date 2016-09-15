@@ -1,11 +1,12 @@
 class GlobalTemp:
     def __init__(self, **kwargs):
+        self.sentinel = object()
         self.old = dict()
         for k, v in kwargs.items():
             if k in globals():
                 self.old[k] = globals()[k]
             else:
-                self.old[k] = None
+                self.old[k] = self.sentinel
         self.new = kwargs
 
     def __enter__(self):
@@ -15,7 +16,13 @@ class GlobalTemp:
 
     def __exit__(self, type, v, traceback):
         for k, v in self.old.items():
-            if v is not None:  # must not abbreviate here. consider v == 0
-                globals()[k] = v
-            else:
+            if v is self.sentinel:
                 del globals()[k]
+            else:
+                globals()[k] = v
+
+x, y = 0, 1
+print('before entry', x, y)
+with GlobalTemp(x=2):
+    print('in environment', x, y)
+print('after exit', x, y)

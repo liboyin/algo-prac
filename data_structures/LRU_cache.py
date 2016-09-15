@@ -80,7 +80,7 @@ class LRUCache:  # re-implementation of functools.lru_cache
 
 class LRU_Cache2:
     def __init__(self, n):
-        self.d = OrderedDict()
+        self.d = OrderedDict()  # OrderedDict is implemented as unordered dict + linked list
         self.n = n
 
     def __getitem__(self, key):

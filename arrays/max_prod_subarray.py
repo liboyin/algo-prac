@@ -9,13 +9,10 @@ def search(arr):
     :param arr: list[num]
     :return: num
     """
-    if len(arr) == 1:
-        return arr[0]
+    assert len(arr) > 0
     min_prod = max_prod = gmax = arr[0]
     for x in arr[1:]:
-        temp = min_prod
-        min_prod = min(x, min_prod * x, max_prod * x)
-        max_prod = max(x, temp * x, max_prod * x)
+        min_prod, max_prod = min(x, min_prod * x, max_prod * x), max(x, min_prod * x, max_prod * x)
         gmax = max(gmax, max_prod)
     return gmax
 

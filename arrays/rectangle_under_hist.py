@@ -47,21 +47,16 @@ def search(hist):  # O(n\log^d n) time, O(n) space
     return query(0, len(hist) - 1)
 
 def search2(hist):  # O(n) time, O(n) space TODO: review
-    n = len(hist)
-    if n == 0:
+    if not hist:
         return 0
-    hist.append(0)  # seal right end
+    max_area = 0
     s = []  # stack of indices of an increasing subsequence
-    i = max_area = 0
-    while i <= n:
-        if not s or hist[i] > hist[s[-1]]:
-            s.append(i)
-        else:
-            height = hist[s.pop()]
-            width = i if not s else i - 1 - s[-1]  # if 0 exists in the middle of hist, height would be 0 when it's encountered again
-            max_area = max(max_area, height * width)
-            i -= 1  # pop until s is empty or hist[i] <= hist[s[-1]]
-        i += 1
+    for i, x in enumerate(hist + [0]):  # seal right end
+        while s and hist[s[-1]] > x:
+            h = hist[s.pop()]
+            max_area = max(max_area, h * ((i - s[-1] - 1) if s else i))
+            # if 0 exists in the middle of hist, height would be 0 when it's encountered again
+        s.append(i)
     return max_area
 
 if __name__ == '__main__':
@@ -76,6 +71,6 @@ if __name__ == '__main__':
         return max_rec
     for k, v in {(6, 1, 5, 4, 5, 2, 6): 12}.items():
         assert search(k) == search2(list(k)) == v
-    for size in [x for x in range(100) for _ in range(x)]:
+    for size in [x for x in range(50) for _ in range(x)]:
         a = [randint(0, size) for _ in range(size)]
-        assert search2(a) == control(a)
+        assert search(a) == search2(a) == control(a)

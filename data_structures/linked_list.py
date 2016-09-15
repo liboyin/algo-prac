@@ -23,7 +23,8 @@ class LinkedList:
         self.head = r
 
     def __iter__(self):
-        for y in yield_while(self.head, lambda x: x is not None, lambda x: x.right):
+        for y in yield_while(self.head, bool, lambda x: x.right):
+            # since __bool__ is not defined in Link, bool(link) is always True unless link is None
             yield y.key
 
 def remove_duplicates(head):  # in-place, O(n^2) time

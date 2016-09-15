@@ -106,15 +106,15 @@ def filter_index(func, iterable, start=0):
 def fst(x):
     return x[0]
 
-def is_pairwise_distinct(arr, key=identity):
-    return all(key(x) != key(y) for x, y in sliding_window(arr, 2))
-
 def is_sorted(arr, key=identity):
     return all(key(x) <= key(y) for x, y in sliding_window(arr, 2))
 
 def iter_equals(xs, ys):
     sentinel = object()
-    return all((x is not sentinel and y is not sentinel and x == y) for x, y in zip_longest(xs, ys, fillvalue=sentinel))
+    for x, y in zip_longest(xs, ys, fillvalue=sentinel):
+        if x is sentinel or y is sentinel or x != y:
+            return False
+    return True
 
 def kth_of_iter(iterable, k=0, default=None):
     """
@@ -166,14 +166,6 @@ def rank(arr, distinct=True):
                 a[i] = a[i-1][0], x[1]  # tuple is immutable
         a = sorted(a, key=np_index(1, 0))  # (rank, (idx, val)), sorted by idx
     return [x[0] for x in a]
-
-def record_class(name, args, scope):
-    # by design, default arguments are instantiated only once. mutable default value will cause aliasing
-    code = ['class {}:'.format(name), '\tdef __init__(self, {}):'.format(args)]
-    for x in [x.split('=')[0] for x in re.split(',\s*', args)]:  # \s matches any whitespace chars
-        code.append('\t\tself.{0} = {0}'.format(x))
-    exec('\n'.join(code), scope)
-    return scope[name]
 
 def rev_enumerate(iterable):
     return reversed(list(enumerate(iterable)))
