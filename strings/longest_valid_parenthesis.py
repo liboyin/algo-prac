@@ -14,14 +14,14 @@ def search(text):
         else:
             assert x == ')'
             if s and text[s[-1]] == '(':
-                s.pop()
-                gmax = max(gmax, i + 1 if not s else i - s[-1])  # if s is empty, everything have successfully paired
-                    # up. otherwise, the index of the stack top is the starting index
+                s.pop()  # remove the paired left parenthesis
+                gmax = max(gmax, i - s[-1] if s else i + 1)  # if s is empty, everything have successfully paired up
+                    # otherwise, the index of the stack top is the starting index
             else:
                 s.append(i)
     return gmax
 
-def search2(text):  # TODO: review
+def search2(text):  # O(n) time, O(n) space TODO: review
     s = []  # stack of indices of unmatched left brackets
     last = None  # Optional[int]. starting index of the current successful match
     gmax = 0

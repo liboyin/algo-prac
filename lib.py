@@ -121,8 +121,8 @@ def kth_of_iter(iterable, k=0, default=None):
     Returns the kth item in an iterable, or the last element if k == 0. If k > len(iterable), returns the default value.
     :param iterable: iterable[T]
     :param k: int. cardinal number unless k == 0
-    :param default: Any
-    :return: Union(T, type(default))
+    :param default: D
+    :return: Union[T,D]
     """
     assert k >= 0
     k -= 1  # to ordinal number
