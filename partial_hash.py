@@ -23,7 +23,7 @@ def kth_unique(seq, k):
     c = OrderedDict()  # implementation of OrderedDict is similar to LRU Cache
     for x in seq:
         c[x] = c.get(x, 0) + 1
-    return kth_of_iter((x for x in c.keys() if c[x] == 1), k)
+    return kth_of_iter((x for x in c.keys() if c[x] == 1), k - 1)
 
 if __name__ == '__main__':
     print(k_divisible_pairs([92, 75, 65, 48, 45, 35], 10))

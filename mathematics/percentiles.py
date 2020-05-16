@@ -1,4 +1,4 @@
-from lib import filter3, filter3_inplace, safe_query
+from lib import filter3, partition, safe_index
 from math import inf
 
 def median_of_two(xs, ys):
@@ -35,7 +35,7 @@ def kth_of_two(xs, ys, k):
     if k == 1:
         return min(xs[0], ys[0])
     h = k // 2  # h is also cardinal
-    if safe_query(xs, h-1, inf) < safe_query(ys, h-1, inf):
+    if safe_index(xs, h-1, inf) < safe_index(ys, h-1, inf):
         return kth_of_two(xs[h:], ys, k - h)  # recursive call
     return kth_of_two(xs, ys[h:], k - h)  # recursive call
 
@@ -58,7 +58,7 @@ def kth(arr, k):
 
 def kth2(arr, k):
     assert 0 < k <= len(arr)
-    i, j = filter3_inplace(arr, arr[len(arr)//2])  # arr[:i] < pivot; arr[i:j] == pivot; arr[j:] > pivot
+    i, j = partition(arr, arr[len(arr)//2])[1:]  # arr[:i] < pivot; arr[i:j] == pivot; arr[j:] > pivot
     if k <= i:
         return kth2(arr[:i], k)  # recursive call
     elif k > j:
