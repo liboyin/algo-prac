@@ -2,15 +2,14 @@
 
 https://en.wikipedia.org/wiki/K-way_merge_algorithm
 """
-from typing import Generator, Iterable, TypeVar
-
 import heapq
+from typing import Generator, Iterable, Iterator, List, Tuple, TypeVar
 
 T = TypeVar('T')
 
 
-def merge(*iterables: Iterable[T]) -> Generator[T]:
-    h = []
+def merge(*iterables: Iterable[T]) -> Generator[T, None, None]:
+    h: List[Tuple[T, int, Iterator[T]]] = []
     for i, xs in enumerate(iterables):
         ite = iter(xs)
         for x in ite:
@@ -30,13 +29,12 @@ def merge(*iterables: Iterable[T]) -> Generator[T]:
             heapq.heappop(h)
 
 
-if __name__ == '__main__':
+def test_merge():
+    import numpy as np
     from lib import is_sorted
     from random import randint
     for _ in range(100):
-        a = [[] for _ in range(10)]
-        for x in a:
-            for _ in range(randint(0, 5)):
-                x.append(randint(0, 10))
-            x.sort()
-        assert is_sorted(tuple(merge(*a)))
+        assert is_sorted(merge(*(
+            sorted(np.random.randint(0, 10, randint(0, 5)))
+            for _ in range(10)
+        )))
