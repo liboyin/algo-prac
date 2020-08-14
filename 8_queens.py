@@ -6,12 +6,11 @@ https://en.wikipedia.org/wiki/Eight_queens_puzzle
 from typing import Generator
 
 import numpy as np
-from numpy import ndarray as NDArray
 
 N = 8
 
 
-def search(mat: NDArray, row: int) -> Generator[NDArray, None, None]:
+def search(mat: np.ndarray, row: int) -> Generator[np.ndarray, None, None]:
     assert row >= 0
     if row == N:
         yield mat

@@ -14,7 +14,7 @@ class GlobalTmpVar:
 
     def __enter__(self):
         for k, v in self.new.items():
-            globals()[k] = v  # TODO: does not work on locals()
+            globals()[k] = v
         return self
 
     def __exit__(self, type, v, traceback):
