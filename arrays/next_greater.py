@@ -1,44 +1,110 @@
-def next_greater(arr):
-    """
-    Returns for each element the index of the next greater element. e.g. f([0, 2, 3, 1]) = [1, 2, None, None].
+"""Find the next greater element in a sequence."""
+from typing import Dict, List, Sequence, TypeVar
+
+T = TypeVar('T')
+
+
+def next_greater_index(seq: Sequence[T]) -> List[int]:
+    """The solution is a non-increasing stack.
+
     Time complexity is O(n). Space complexity is O(n).
-    :param arr: list[num]
-    :return: list[int]
+
+    Examples:
+        >>> next_greater_index([0, 2, 3, 1])
+        [1, 2, -1, -1]
     """
-    s = [0]  # list[int]. maintains as a stack the indices of a non-increasing subsequence of arr
-    r = [None] * len(arr)  # list[int]. r[i]: smallest j s.t. a[j] > a[i], or None if such j does not exist
-    for i, x in enumerate(arr[1:], start=1):
-        while s and x > arr[s[-1]]:  # for all indices y in stack s.t. arr[y] < x
-            r[s.pop()] = i
-        s.append(i)
-    return r  # returns indices
+    # result[i]: smallest j s.t. a[j] > a[i], or -1 if such j does not exist
+    result: List[int] = [-1] * len(seq)
+    stack: List[int] = [0]  # non-increasing stack of indices
+    for i, x in enumerate(seq[1:], start=1):
+        while stack and x > seq[stack[-1]]:  # for all indices j in stack s.t. seq[j] < x
+            result[stack.pop()] = i
+        stack.append(i)
+    return result
 
-def prev_greater(arr):
-    n = len(arr)
-    r = next_greater(arr[::-1])
-    r.reverse()
-    for i, x in enumerate(r):
-        if x is not None:
-            r[i] = n - 1 - x
-    return r
 
-if __name__ == '__main__':
-    from lib import rev_range
+def next_greater_element(nums1: Sequence[int], nums2: Sequence[int]) -> List[int]:
+    """496. https://leetcode.com/problems/next-greater-element-i/
+
+    Given two arrays (without duplicates) `nums1` and `nums2` where `nums1`’s elements are subset of `nums2`.
+
+    Find all the next greater numbers for `nums1`'s elements in the corresponding places of `nums2`.
+
+    All elements are unique.
+
+    Examples:
+        >>> next_greater_element([4, 1, 2], [1, 3, 4, 2])
+        [-1, 3, -1]
+    """
+    if not nums1 or not nums2:
+        return []
+    nge2: Dict[int, int] = {}  # next greater element for each element in nums2
+    stack: List[int] = [0]
+    for i, x in enumerate(nums2[1:], start=1):
+        while stack and x > nums2[stack[-1]]:
+            nge2[nums2[stack.pop()]] = x
+        stack.append(i)
+    return [nge2.get(x, -1) for x in nums1]
+
+
+def circular_next_greater_element(nums: List[int]) -> List[int]:
+    """503. https://leetcode.com/problems/next-greater-element-ii
+
+    Given a circular array (the next element of the last element is the first element of the array),
+    return the next greater number for every element.
+
+    Examples:
+        >>> circular_next_greater_element([1, 2, 1])
+        [2, -1, 2]
+    """
+    if not nums:
+        return []
+    N = len(nums)
+    nums2: List[int] = nums + nums
+    nge2: List[int] = [-1] * (N * 2)
+    stack: List[int] = [0]
+    for i, x in enumerate(nums2[1:], start=1):
+        while stack and x > nums2[stack[-1]]:
+            nge2[stack.pop()] = x
+        stack.append(i)
+    return nge2[:N]
+
+
+def days2wait(T: List[int]) -> List[int]:
+    """739. https://leetcode.com/problems/daily-temperatures/
+    
+    Given a list of daily temperatures `T`, return a list such that, for each day in the input,
+    tells you how many days you would have to wait until a warmer temperature.
+
+    If there is no future day for which this is possible, put 0 instead.
+
+    Examples:
+        >>> days2wait([73, 74, 75, 71, 69, 72, 76, 73])
+        [1, 1, 4, 2, 1, 1, 0, 0]
+    """
+    result: List[int] = [0] * len(T)
+    stack: List[int] = [0]
+    for i, x in enumerate(T[1:], start=1):
+        while stack and x > T[stack[-1]]:
+            j = stack.pop()
+            result[j] = i - j
+        stack.append(i)
+    return result
+
+
+def ref_next_greater_index(seq: Sequence[T]) -> List[int]:
+    """Brute-force reference of next_greater_index()."""
+    N = len(seq)
+    return [
+        next((j for j in range(i + 1, N) if seq[j] > seq[i]), -1)
+        for i in range(N)
+    ]
+
+
+def test_next_greater_index():
     from random import shuffle
-    def control_next(arr):
-        n = len(arr)
-        r = []
-        for i in range(n):
-            r.append(next((j for j in range(i+1, n) if arr[j] > arr[i]), None))
-        return r
-    def control_prev(arr):
-        n = len(arr)
-        r = [] * n
-        for i in range(n):
-            r.append(next((j for j in rev_range(i) if arr[j] > arr[i]), None))
-        return r
-    for size in [x for x in range(50) for _ in range(x)]:
-        a = list(range(size)) * 2
-        shuffle(a)
-        assert next_greater(a) == control_next(a)
-        assert prev_greater(a) == control_prev(a)
+    assert next_greater_index([]) == []
+    for size in [x for x in range(20) for _ in range(x)]:
+        seq = list(range(size)) * 3
+        shuffle(seq)
+        assert next_greater_index(seq) == ref_next_greater_index(seq)
