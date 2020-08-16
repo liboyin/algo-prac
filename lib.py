@@ -5,6 +5,8 @@ from math import floor, log2
 from typing import (Any, Callable, Dict, Generator, Iterable, Iterator, List,
                     Optional, Protocol, Sequence, Tuple, TypeVar, Union)
 
+SENTINEL = object()
+
 
 class Comparable(Protocol):
     @abstractmethod
@@ -541,6 +543,72 @@ def filter_index(
 
 
 # functional utils
+class PeekableIterator(Iterator[T]):
+    """An iterator wrapper that supports `peek()`.
+
+    Similar to `more_itertools.peekable()`, but supports generic type annotations.
+
+    Examples:
+        >>> next(PeekableIterator([]))
+        Traceback (most recent call last):
+            ...
+        StopIteration
+        >>> PeekableIterator([]).peek()
+        Traceback (most recent call last):
+            ...
+        StopIteration
+        >>> next(PeekableIterator('a'))
+        'a'
+        >>> i = PeekableIterator('a'); i.peek(); i.peek()
+        'a'
+        'a'
+        >>> i = PeekableIterator('a'); i.peek(); next(i)
+        'a'
+        'a'
+        >>> i = PeekableIterator('a'); next(i); i.peek()
+        Traceback (most recent call last):
+            ...
+        StopIteration
+        >>> i = PeekableIterator('ab'); next(i); i.peek()
+        'a'
+        'b'
+    """
+    def __init__(self, iterable: Iterable[T]) -> None:
+        self.iterator: Iterator[T] = iter(iterable)
+        self.head: Union[object, T] = SENTINEL
+
+    def __bool__(self) -> bool:
+        try:
+            self.peek()
+        except StopIteration:
+            return False
+        return True
+
+    def _update_head(self) -> None:
+        try:
+            self.head = next(self.iterator)
+        except StopIteration:
+            self.head = SENTINEL
+
+    def __next__(self) -> T:
+        if self.head is SENTINEL:
+            self._update_head()
+        if self.head is SENTINEL:
+            raise StopIteration
+        tmp = self.head
+        self.head = SENTINEL
+        return tmp
+
+    def peek(self, default: Union[object, T] = SENTINEL) -> T:
+        if self.head is SENTINEL:
+            self._update_head()
+        if self.head is SENTINEL:
+            if default is SENTINEL:
+                raise StopIteration
+            return default
+        return self.head
+
+
 def stated_map(
     func: Callable[[T, V], T],
     iterable: Iterable[V],
