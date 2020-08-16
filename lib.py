@@ -1,13 +1,35 @@
-import random
 import re
+from abc import abstractmethod
 from itertools import tee, zip_longest
 from math import floor, log2
 from typing import (Any, Callable, Dict, Generator, Iterable, Iterator, List,
-                    Optional, Sequence, Tuple, TypeVar, Union)
+                    Optional, Protocol, Sequence, Tuple, TypeVar, Union)
 
-K = TypeVar('K')
-T = TypeVar('T')
-V = TypeVar('V')
+
+class Comparable(Protocol):
+    @abstractmethod
+    def __eq__(self, other) -> bool:
+        ...
+
+    @abstractmethod
+    def __lt__(self, other) -> bool:
+        ...
+
+    @abstractmethod
+    def __le__(self, other) -> bool:
+        ...
+
+    @abstractmethod
+    def __gt__(self, other) -> bool:
+        ...
+
+    @abstractmethod
+    def __ge__(self, other) -> bool:
+        ...
+
+T = TypeVar('T', bound=Comparable)
+V = TypeVar('V', bound=Comparable)
+K = Union[T, V]  # key type
 
 
 # trivial functions
@@ -376,16 +398,17 @@ def rank(seq: Sequence[T], distinct: bool = True) -> Tuple[int, ...]:
         >>> rank([2, 2, 3, 1], distinct=False)
         (1, 1, 3, 0)
     """
-    a = sorted(enumerate(seq), key=snd)  # (idx, val), sorted by val
+    iv: List[Tuple[int, T]] = sorted(enumerate(seq), key=snd)  # (idx, val), sorted by val
+    riv: List[Tuple[int, Tuple[int, T]]]  # (rank, (idx, val))
     if distinct:
-        a = sorted(enumerate(a), key=nd_getitem(1, 0))  # (rank, (idx, val)), sorted by idx
+        riv = sorted(enumerate(iv), key=nd_getitem(1, 0))  # sorted by idx
     else:
-        a = list(enumerate(a))  # (rank, (idx, val)), sorted by val
-        for i, x in enumerate(a[1:], start=1):  # skip a[0]
-            if x[1][1] == a[i - 1][1][1]:  # same val
-                a[i] = (a[i - 1][0], x[1])  # tuple is immutable
-        a = sorted(a, key=nd_getitem(1, 0))  # (rank, (idx, val)), sorted by idx
-    return tuple(x[0] for x in a)
+        riv = list(enumerate(iv))  # sorted by val
+        for i, x in enumerate(riv[1:], start=1):  # skip a[0]
+            if x[1][1] == riv[i - 1][1][1]:  # same val
+                riv[i] = (riv[i - 1][0], x[1])  # tuple is immutable
+        riv = sorted(riv, key=nd_getitem(1, 0))  # sorted by idx
+    return tuple(x[0] for x in riv)
 
 
 # filtering
@@ -555,6 +578,8 @@ def sliding_window(
     size: int,
 ) -> Iterator[Tuple[T, ...]]:
     """Creates a sliding window with specified size on an iterable.
+
+    Similar to `more_itertools.windowed()`, but supports generic type annotation.
 
     Examples:
         >>> list(sliding_window(range(5), size=3))
@@ -745,6 +770,7 @@ def randints(lower: int, upper: int, n: int) -> Tuple[int, ...]:
         upper (int): upper bound, exclusive
         n (int): number of random integers to generate
     """
+    import random
     m = upper - lower + 1
     assert 0 <= n <= m, (n, m)
     rs = []
