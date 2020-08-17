@@ -1,72 +1,55 @@
-from collections import defaultdict
-from lib import snd
+from typing import List, Sequence, Set, Tuple
 
-def search(arr, target):
-    """
-    Finds all triples of index i, j, k, s.t. arr[i] + arr[j] + arr[k] == target.
-    Expected time complexity is O(n^2). Space complexity is O(n^2).
-    Note that an algorithm that accepts repetitions has a worst case time complexity no lower than O(n^3).
-    :param arr: list[num]
-    :param target: num
-    :return: generator[int,int,int], indices in increasing order
-    """
-    n = len(arr)
-    if n < 3:
-        return
-    d = defaultdict(set)
-    for i, x in enumerate(arr[2:], start=2):
-        d[x].add(i)
-    for mid in range(1, n-1):  # all indices with a left and a right
-        for left in range(mid):
-            for i in d[target-arr[left]-arr[mid]]:
-                yield left, mid, i  # sequence generation is out-of-order due to the use of set
-        d[arr[mid+1]].remove(mid + 1)  # removing an empty entry from dict is not necessary
 
-def search2(arr, target):
-    """
-    Assuming unique elements, finds all triples of index i, j, k, s.t. arr[i] + arr[j] + arr[k] == target.
-    If arr contains repetitions, only a subset of all triples is generated.
+def search(seq: Sequence[int]) -> List[Tuple[int, int, int]]:
+    """15. https://leetcode.com/problems/3sum/
+
+    Given an array of integers, are there elements `a, b, c` such that `a + b + c = 0`?
+
+    Find all unique triplets in the array which gives the sum of zero.
+
+    The solution set must not contain duplicate triplets.
+
     Time complexity is O(n^2). Space complexity is O(n).
-    This algorithm can be modified to find arr[i] + arr[j] + arr[k] that approximates the target.
-    :param arr: list[num]
-    :param target: num
-    :return: generator[int,int,int], indices in increasing order
     """
-    n = len(arr)
-    if n < 3:
-        return
-    a = sorted(enumerate(arr), key=snd)  # sequence generation is hence out-of-order
-    for left in range(n - 1):
-        mid = left + 1
-        right = n - 1
-        while mid < right:  # some have proposed bin_search instead of linear scan. a linear search is able to find
-            # the correct index in case of a hit. however, in case of a miss, it would be impossible to decide whether
-            # the left or the right cursor should be increased
-            js, xs = zip(a[left], a[mid], a[right])  # 'is' is a system keyword
-            s = sum(xs)
-            if s == target:
-                yield tuple(sorted(js))  # js is an iterator
-                right -= 1  # repetitions are not handled
-            elif s > target:
-                right -= 1
-            else:
-                mid += 1
+    results: List[Tuple[int, int, int]] = []
+    N = len(seq)
+    if N < 3:
+        return []
+    xs: List[int] = sorted(seq)
+    for i in range(N - 2):
+        if i and xs[i] == xs[i - 1]:
+            continue
+        # find distinct elements x and y in xs[i + 1:] s.t. x + y == -xs[i]
+        seen: Set[int] = set()
+        for x in xs[i + 1:]:
+            y = -xs[i] - x
+            if y in seen:
+                # implicitly guarantee that tmp[0] <= tmp[1] <= tmp[2]
+                tmp = (xs[i], y, x)
+                if not results or results[-1] != tmp:
+                    results.append(tmp)
+            seen.add(x)
+    return results
 
-if __name__ == '__main__':
-    from random import randint, shuffle
-    def control(arr, target):  # O(n^3)
-        n = len(arr)
-        for i in range(n):
-            for j in range(i+1, n):
-                for k in range(j+1, n):
-                    if arr[i] + arr[j] + arr[k] == target:
-                        yield i, j, k
-    for size in [x for x in range(3, 32) for _ in range(x)]:
-        a = [randint(-size, size) for _ in range(size)]
-        t = randint(-size, size)
-        pool = set(control(a, t))
-        assert pool == set(search(a, t))
-        assert set(search2(a, t)).issubset(pool)
-        a = list(set(a))
-        shuffle(a)
-        assert set(search(a, t)) == set(search2(a, t))
+
+def ref_search(seq: Sequence[int]) -> Set[Tuple[int, int, int]]:
+    results: Set[Tuple[int, int, int]] = set()
+    N = len(seq)
+    if N < 3:
+        return results
+    for i in range(N - 2):
+        for j in range(i + 1, N - 1):
+            for k in range(j + 1, N):
+                tmp = [seq[i], seq[j], seq[k]]
+                if sum(tmp) == 0:
+                    tmp.sort()
+                    results.add(tuple(tmp))
+    return results
+
+
+def test_search():
+    import numpy as np
+    for n in range(32):
+        seq = np.random.randint(-n, n + 1, n).tolist()
+        assert set(search(seq)) == ref_search(seq)
