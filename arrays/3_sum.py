@@ -49,7 +49,7 @@ def ref_search(seq: Sequence[int]) -> Set[Tuple[int, int, int]]:
 
 
 def test_search():
-    import numpy as np
+    from numpy.random import randint
     for n in range(32):
-        seq = np.random.randint(-n, n + 1, n).tolist()
+        seq = randint(-n, n + 1, n).tolist()
         assert set(search(seq)) == ref_search(seq)

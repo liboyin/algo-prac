@@ -60,7 +60,7 @@ def spiral2(mat: Sequence[Sequence[T]]) -> Generator[T, None, None]:
 
 
 def test_spiral():
-    import numpy as np
+    from numpy.random import randint
     for mat, seq in [
         (
             [
@@ -97,6 +97,6 @@ def test_spiral():
     ]:
         assert list(spiral(mat)) == list(spiral2(mat)) == seq
     for _ in range(20):
-        shape = np.random.randint(1, 6, 2)
+        shape = randint(1, 6, 2)
         mat = np.arange(shape[0] * shape[1]).reshape(shape).tolist()
         assert list(spiral(mat)) == list(spiral2(mat))

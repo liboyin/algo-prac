@@ -28,7 +28,7 @@ def merge(xs: PeekableIterator[T], ys: PeekableIterator[T]) -> Generator[T, None
 
 
 def test_mergesort():
-    import numpy as np
+    from numpy.random import randint
     for i in range(32):
-        arr = np.random.randint(0, i, i)
+        arr = randint(0, i, i)
         assert list(mergesort(arr)) == sorted(arr)
