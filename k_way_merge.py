@@ -3,38 +3,35 @@
 https://en.wikipedia.org/wiki/K-way_merge_algorithm
 """
 import heapq
-from typing import Generator, Iterable, Iterator, List, Tuple, TypeVar
+from typing import Generator, Iterable, Iterator, List, Tuple
 
-T = TypeVar('T')
-
+from comparable import T
 
 def merge(*iterables: Iterable[T]) -> Generator[T, None, None]:
     h: List[Tuple[T, int, Iterator[T]]] = []
     for i, xs in enumerate(iterables):
-        ite = iter(xs)
-        for x in ite:
-            # `heapq` resolves ties between tuples by looking at the next element. Here, index is
-            # added as a tie breaker. This makes the output sequence is stable. Note that only the
-            # first element is added.
-            h.append((x, i, ite))
-            break
+        iterator = iter(xs)
+        # `heapq` resolves ties between tuples by looking at the next element. Here, index is
+        # added as a tie breaker. This makes the output sequence stable within each input iterable.
+        try:
+            h.append((next(iterator), i, iterator))
+        except StopIteration:
+            pass
     heapq.heapify(h)
     while h:
-        x, i, ite = h[0]
+        x, i, iterator = h[0]
         yield x
-        for x in ite:  # Add the next element back to `h`, unless `ite` is exhausted
-            heapq.heapreplace(h, (x, i, ite))  # more efficient than heappop + heappush
-            break
-        else:  # only executed when ite is exhausted
+        try:  # Add the next element back to the heap
+            heapq.heapreplace(h, (next(iterator), i, iterator))  # more efficient than heappop + heappush
+        except StopIteration:
             heapq.heappop(h)
 
 
 def test_merge():
-    import numpy as np
     from lib import is_sorted
-    from random import randint
-    for _ in range(100):
+    from numpy.random import randint
+    for _ in range(1000):
         assert is_sorted(merge(*(
-            sorted(np.random.randint(0, 10, randint(0, 5)))
+            sorted(randint(0, 10, randint(0, 5)))
             for _ in range(10)
         )))
