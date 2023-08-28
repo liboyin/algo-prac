@@ -2,11 +2,10 @@
 MergeSort with iterators.
 """
 from itertools import chain
-from typing import Generator, Sequence, TypeVar
+from typing import Generator, Sequence
 
-from lib import Comparable, PeekableIterator
-
-T = TypeVar('T', bound=Comparable)
+from comparable import T
+from lib import PeekableIterator
 
 
 def mergesort(xs: Sequence[T]) -> Generator[T, None, None]:

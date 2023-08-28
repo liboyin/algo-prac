@@ -3,33 +3,10 @@ from abc import abstractmethod
 from itertools import tee, zip_longest
 from math import floor, log2
 from typing import (Any, Callable, Dict, Generator, Iterable, Iterator, List,
-                    Optional, Protocol, Sequence, Tuple, TypeVar, Union)
+                    Optional, Sequence, Tuple, TypeVar, Union)
 
-SENTINEL = object()
+from comparable import T, Comparable
 
-
-class Comparable(Protocol):
-    @abstractmethod
-    def __eq__(self, other) -> bool:
-        ...
-
-    @abstractmethod
-    def __lt__(self, other) -> bool:
-        ...
-
-    @abstractmethod
-    def __le__(self, other) -> bool:
-        ...
-
-    @abstractmethod
-    def __gt__(self, other) -> bool:
-        ...
-
-    @abstractmethod
-    def __ge__(self, other) -> bool:
-        ...
-
-T = TypeVar('T', bound=Comparable)
 V = TypeVar('V', bound=Comparable)
 K = Union[T, V]  # key type
 
@@ -543,6 +520,7 @@ def filter_index(
 
 
 # functional utils
+SENTINEL = object()
 class PeekableIterator(Iterator[T]):
     """An iterator wrapper that supports `peek()`.
 
@@ -584,7 +562,7 @@ class PeekableIterator(Iterator[T]):
             return False
         return True
 
-    def _update_head(self) -> None:
+    def _advance_head(self) -> None:
         try:
             self.head = next(self.iterator)
         except StopIteration:
@@ -592,7 +570,7 @@ class PeekableIterator(Iterator[T]):
 
     def __next__(self) -> T:
         if self.head is SENTINEL:
-            self._update_head()
+            self._advance_head()
         if self.head is SENTINEL:
             raise StopIteration
         tmp = self.head
@@ -601,7 +579,7 @@ class PeekableIterator(Iterator[T]):
 
     def peek(self, default: Union[object, T] = SENTINEL) -> T:
         if self.head is SENTINEL:
-            self._update_head()
+            self._advance_head()
         if self.head is SENTINEL:
             if default is SENTINEL:
                 raise StopIteration
