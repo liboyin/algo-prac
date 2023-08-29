@@ -1,17 +1,19 @@
 from collections import deque
+from dataclasses import dataclass, field
 from typing import Deque, List, Optional, Tuple
 
-
+@dataclass
 class Node:
-    def __init__(self, val: int, parent: Optional['Node'] = None) -> None:
-        self.val: int = val
-        self.parent: Optional['Node'] = parent
-        self.children: List['Node'] = []
-        # following attributes will be set in self.preprocess()
-        self.node_level: int = 0
-        self.jump_level: int = 0
-        self.ancestor_for_jump: 'Node' = self
-
+    val: int
+    parent: 'Optional[Node]' = None
+    children: List['Node'] = field(default_factory=list)
+    # following attributes will be set in self.preprocess()
+    node_level: int = 0
+    jump_level: int = 0
+    ancestor_for_jump: 'Node' = field(init=False)
+    
+    def __post_init__(self):
+        self.ancestor_for_jump = self
 
 def preprocess(root: Node, jump_interval: int) -> None:
     """
