@@ -1,26 +1,27 @@
+from dataclasses import dataclass
 from random import shuffle
 
+from comparable import T
+
+
+@dataclass
 class Node:
-    def __init__(self, left, val, right):
-        self.left = left
-        self.val = val
-        self.right = right
+    value: T
+    left: 'Node' = None
+    right: 'Node' = None
 
-    def __eq__(self, other):  # compares val, but not left or right
-        return isinstance(other, Node) and self.val == other.val
-
-    def __repr__(self):
-        return '({}, {}, {})'.format(self.left, self.val, self.right)
 
 def tuple_to_tree(x):
     if x is None:
         return None
     return Node(tuple_to_tree(x.left), x.val, tuple_to_tree(x.right))  # recursive call
 
+
 def tree_to_tuple(x):
     if x is None:
         return None
     return (tree_to_tuple(x.left), x.val, tree_to_tuple(x.right))  # recursive call
+
 
 def random_bst(size):
     assert size > 0

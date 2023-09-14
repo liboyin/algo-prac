@@ -1,14 +1,7 @@
-from dataclasses import dataclass
 from typing import Tuple
 
 from comparable import T
-
-
-@dataclass
-class Node:
-    value: T
-    left: 'Node' = None
-    right: 'Node' = None
+from trees.construction import Node
 
 
 def find_max_sub_bst_size(root: Node) -> int:
