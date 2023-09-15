@@ -1,18 +1,18 @@
 from dataclasses import dataclass
 from random import shuffle
-from typing import Optional, Self
+from typing import Any, Generic, Optional
 
 from comparable import T
 
 
 @dataclass
-class Node:
+class Node(Generic[T]):
     value: T
-    left: Optional['Node'] = None
-    right: Optional['Node'] = None
+    left: Optional['Node[T]'] = None
+    right: Optional['Node[T]'] = None
 
     @classmethod
-    def from_tuple(cls, x: tuple | None) -> Self | None:
+    def from_tuple(cls, x: tuple | None) -> Optional['Node[T]']:  # 'Node[T]' | None is not allowed
         """
         Converts a tuple representation of a binary tree to a Node object.
 
@@ -34,7 +34,7 @@ class Node:
         Returns:
             tuple | None: `(value, left, right)`
         """
-        result = [self.value]
+        result: list[tuple | T | None] = [self.value]
         result.append(None if self.left is None else self.left.to_tuple())  # recursive call
         result.append(None if self.right is None else self.right.to_tuple())  # recursive call
         return tuple(result)

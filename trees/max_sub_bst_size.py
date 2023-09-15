@@ -4,7 +4,7 @@ from comparable import T
 from trees.construction import Node
 
 
-def find_max_sub_bst_size(root: Node) -> int:
+def find_max_sub_bst_size(root: Node[T]) -> int:
     """
     Search the binary tree rooted at `root` to find the maximum size of a binary search tree (BST) within it.
     
@@ -14,6 +14,8 @@ def find_max_sub_bst_size(root: Node) -> int:
     Returns:
         int: The maximum size of a BST found within the binary tree.
     """
+    max_size = 1
+
     def search_subtree(x: Node) -> Tuple[T, T, int] | None:
         """
         Helper function to recursively search for BSTs within the binary tree rooted at `x`.
@@ -59,7 +61,6 @@ def find_max_sub_bst_size(root: Node) -> int:
             max_size = max(max_size, size)
             return l_min, r_max, size
 
-    max_size = 1
     search_subtree(root)
     return max_size
 
